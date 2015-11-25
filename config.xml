@@ -76,4 +76,5 @@
     <feature name="Media">
         <param name="android-package" value="org.apache.cordova.media.AudioHandler" />
     </feature>
+    <allow-navigation href="http://*/*" />
 </widget>

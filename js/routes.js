@@ -31,9 +31,8 @@ app.controller('loginController', function($scope, $http){
 				}
 			}).
 			error(function(data, status, headers, config){
-				alert("error "+data+" status "+status+" headers "+headers+ " config "+JSON.stringify(config))
 				$("#error").empty();
-				$("#error").html("<div style='padding: 15%' class='yellow'><i class='mdi-alert-warning'></i> Lo sentimos ha ocurrido un error al procesar su información. Inténtelo nuevamente.</div>");
+				$("#error").html("<div class='yellow center-align'>><i class='mdi-alert-warning'></i> Lo sentimos ha ocurrido un error al procesar su información. Inténtelo nuevamente.</div>");
 				$("#error").css('color', '#d50000');
 				$scope.mensaje = "Lo sentimos ha ocurrido un error al procesar su información. Inténtelo nuevamente."
 			})
