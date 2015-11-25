@@ -20,8 +20,8 @@
 
 if (!document.querySelector('meta[http-equiv=Content-Security-Policy]')) {
     var msg = 'No Content-Security-Policy meta tag found. Please add one when using the cordova-plugin-whitelist plugin.';
-    console.error(msg);
+    alert(msg);
     setInterval(function() {
-        console.warn(msg);
+        alert(msg);
     }, 10000);
 }
