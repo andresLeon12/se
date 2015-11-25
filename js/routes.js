@@ -32,7 +32,7 @@ app.controller('loginController', function($scope, $http){
 			}).
 			error(function(data, status, headers, config){
 				$("#error").empty();
-				$("#error").html("<div class='yellow center-align'>><i class='mdi-alert-warning'></i> Lo sentimos ha ocurrido un error al procesar su información. Inténtelo nuevamente.</div>");
+				$("#error").html("<div class='yellow center-align'><i class='mdi-alert-warning'></i> Lo sentimos ha ocurrido un error al procesar su información. Inténtelo nuevamente.</div>");
 				$("#error").css('color', '#d50000');
 				$scope.mensaje = "Lo sentimos ha ocurrido un error al procesar su información. Inténtelo nuevamente."
 			})
