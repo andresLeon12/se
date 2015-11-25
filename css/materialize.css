@@ -2180,15 +2180,18 @@ ul.staggered-list li {
 
 @media only screen and (min-width: 600px) and (max-width: 992px) {
   #login {
-    padding: 0 0;
+    padding: 20% 0;
   }
   #centrar {
-    padding: 5% 0;
+    padding: 15% 0;
   }
   .hide-on-med-only {
     display: none !important; } }
 
 @media only screen and (min-width : 993px) {
+  #login {
+    padding: 10% 0;
+  }
   .hide-on-large-only {
     display: none !important; } }
 
