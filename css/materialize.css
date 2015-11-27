@@ -3,6 +3,7 @@
  * Copyright 2014-2015 Materialize
  * MIT License (https://raw.githubusercontent.com/Dogfalo/materialize/master/LICENSE)
  */
+ /* Nombre del usuario */
 
 .materialize-red.lighten-5 {
   background-color: #fdeaeb !important; }
@@ -5352,9 +5353,9 @@ nav {
     nav .nav-wrapper i {
       display: block;
       font-size: 2rem; }
-  @media only screen and (min-width : 993px) {
+  /*@media only screen and (min-width : 993px) {
     nav a.button-collapse {
-      display: none; } }
+      display: none; } }*/
   nav .button-collapse {
     float: left;
     position: relative;
@@ -8344,3 +8345,17 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   .picker--time .picker__box {
     margin-bottom: 5em; } }
 
+.menu {
+  font-size: 0.7rem;
+}
+.menu small {
+  text-align: left;
+  position: fixed;
+  z-index: 199;
+  color: #ccc;
+}
+.active-name {
+  background-color: #cfd8dc;
+  color : white;
+  border-bottom: 1px solid #FF5722;
+}
