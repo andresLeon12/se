@@ -1,5 +1,5 @@
-var url_server = 'http://10.42.0.1:8080/';
-var socket = io.connect(url_server);
+var url_server = 'http://192.168.1.103:8080/';
+var socket = io.connect(urlserver);
 
 $(document).ready(function(){
 	$('.button-collapse').sideNav({
