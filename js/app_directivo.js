@@ -1,20 +1,6 @@
 var url_server = 'http://192.168.1.103:8080/';
-var socket = io.connect(urlserver);
+var socket = io.connect(url_server);
 
-$(document).ready(function(){
-	$('.button-collapse').sideNav({
-	      menuWidth: 350, // Default is 240
-	      edge: 'left', // Choose the horizontal origin
-	      closeOnClick: true // Closes side-nav on <a> clicks, useful for Angular/Meteor
-	    }
-	);
-});
-
-/* Modal eliminar y actualizar */
-$(document).on("click", ".modal-trigger", function(){
-	var id = $(this).attr("id");
-	$(id).openModal();
-});
 /* Controlador para secretario */
 var app = angular.module('secreto', [])
 
@@ -24,7 +10,6 @@ app.controller('directivoController', function($scope, $http){
 	$scope.acuerdos = {}
 	$scope.personas = {}
 	$scope.tarea = {}
-
 	/* Obtenemos los parametros de la url */
     var edit = getUrlParameter('id');
     /* Llamamos a la función para obtener la lista de usuario al cargar la pantalla */

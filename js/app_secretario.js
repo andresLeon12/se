@@ -1,6 +1,5 @@
 var url_server = 'http://192.168.1.103:8080/';
 var socket = io.connect(url_server);
-
 /* Controlador para secretario */
 var app = angular.module('secreto', [])
 
