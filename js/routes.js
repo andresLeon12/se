@@ -1,9 +1,9 @@
 var app = angular.module('secreto', [])
-var url_server = 'http://192.168.1.101:8080/';
-var socket = io.connect(url_server);
+var url_server = 'http://10.42.0.1:8080/';
 
 /* Controlador de login */
 app.controller('loginController', function($scope, $http){
+	localStorage.removeItem('usuario')
 	$scope.datos = {}
 	/* Funcion de login */
 	$scope.login = function(){
@@ -21,14 +21,13 @@ app.controller('loginController', function($scope, $http){
 					    localStorage.setItem("usuario", JSON.stringify(datos.data));
 					} 
 					// Redirigimos a la pagina correspondiente segun el tipo de usuario
-					if(datos.data.puesto === "empleado"){
-						alert("Empleado")
-					}else if (datos.data.puesto === "director") {
-						alert("Director")
-					}else if (datos.data.puesto === "secretario") {
-						//$("body").load("secretario.html")
-						window.location.href = 'secretario.html'
-					}else if (datos.data.puesto === "gerente") {
+					if(datos.data.puesto_nombre === "Empleado"){
+						window.location.href = 'pages_empleado/empleado.html'
+					}else if (datos.data.puesto_nombre === "Directivo") {
+						window.location.href = 'pages_directivo/directivo.html'
+					}else if (datos.data.puesto_nombre === "Secretario") {
+						window.location.href = 'pages_secretario/secretario.html'
+					}else if (datos.data.puesto_nombre === "gerente") {
 						alert("Gerente")
 					}
 				}
