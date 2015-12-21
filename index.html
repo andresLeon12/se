@@ -12,7 +12,7 @@
 			<script type="text/javascript" src="js/routes.js"></script>
 			<script type="text/javascript" src="js/plugins.min.js"></script>
 			<script type="text/javascript" src="js/perfect-scrollbar.min.js"></script>
-			<script type="text/javascript" src="cordova.js"></script>
+			<!--<script type="text/javascript" src="cordova.js"></script>-->
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='css/materialize.css'/>
 			<link rel='stylesheet' href='css/materialize.min.css'/>
@@ -41,12 +41,20 @@
 		  </div>
 		  <!-- End Page Loading -->
 		  <div id="login-page" class="row" ng-controller='loginController'>
+		  <div id="error"></div>
 		    <div class="col s12 z-depth-4 card-panel">
 		      <form class="login-form" ng-submit='login()'>
 		        <div class="row">
 		          <div class="input-field col s12 center">
 		            <img src="images/login-logo.png" alt="" class="circle responsive-img valign profile-image-login">
 		            <p class="center login-form-text">SECRETO</p>
+		          </div>
+		        </div>
+		        <div class="row margin">
+		          <div class="input-field col s12">
+		            <i class="mdi-social-person-outline prefix"></i>
+		            <input id="empresa" ng-model='datos.empresa' type="text" required>
+		            <label for="empresa" class="center-align">Clave de la empresa</label>
 		          </div>
 		        </div>
 		        <div class="row margin">

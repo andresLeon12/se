@@ -6,6 +6,7 @@ var app = angular.module('secreto', [])
 
 app.controller('empleadoController', function($scope, $http){
 	var usuario = localStorage.getItem("usuario")
+	var empresa = localStorage.getItem("empresa")
 	$scope.usuario = JSON.parse(usuario);
 	$scope.tareas = {}
 	$scope.personas = {}
@@ -25,7 +26,7 @@ app.controller('empleadoController', function($scope, $http){
 			var htmlText = '<li><a href="tarea.html?id='+data._id+'"><i class="mdi-social-notifications"></i> '+data.ACUDES+'</a></li>'
 			$("#notifications-dropdown").append(htmlText);
 			Materialize.toast('Nueva tarea asignada!', 4000)
-			$http.get(url_server+"tarea/buscar/"+myName).success(function(response) {
+			$http.get(url_server+"tarea/buscar/"+myName+"/"+empresa).success(function(response) {
 		        if(response.type) { // Si nos devuelve un OK la API...
 		        	total_tarea();
 		        }
@@ -37,7 +38,7 @@ app.controller('empleadoController', function($scope, $http){
 	function total_tareas(){
 		var user = JSON.parse(usuario)
 		var myName = user._id;
-		$http.get(url_server+"tarea/buscar/"+myName).success(function(response) {
+		$http.get(url_server+"tarea/buscar/"+myName+"/"+empresa).success(function(response) {
 			if(response.type) { // Si nos devuelve un OK la API...
 		        $scope.tareas = response.data;
 		        /*var total_acuerdos = response.data.length;

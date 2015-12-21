@@ -7,7 +7,7 @@ app.controller('loginController', function($scope, $http){
 	$scope.datos = {}
 	/* Funcion de login */
 	$scope.login = function(){
-		$http.get(url_server+'login', { params : {correo: $scope.datos.correo, clave: $scope.datos.clave}}).
+		$http.get(url_server+'login', { params : {correo: $scope.datos.correo, clave: $scope.datos.clave, empresa : $scope.datos.empresa}}).
 			success(function(datos){
 				if(!datos.type){
 					$scope.mensaje = datos.data;
@@ -19,17 +19,20 @@ app.controller('loginController', function($scope, $http){
 					if(typeof(Storage) !== "undefined") {
 						// Alamcenamos la información del usuario
 					    localStorage.setItem("usuario", JSON.stringify(datos.data));
+					    localStorage.setItem("empresa", $scope.datos.empresa);
 					} 
-					// Redirigimos a la pagina correspondiente segun el tipo de usuario
-					if(datos.data.puesto_nombre === "Empleado"){
-						window.location.href = 'pages_empleado/empleado.html'
-					}else if (datos.data.puesto_nombre === "Directivo") {
-						window.location.href = 'pages_directivo/directivo.html'
-					}else if (datos.data.puesto_nombre === "Secretario") {
-						window.location.href = 'pages_secretario/secretario.html'
-					}else if (datos.data.puesto_nombre === "gerente") {
-						alert("Gerente")
-					}
+					$http.get(url_server+"puesto/buscar/"+datos.data.puesto).success(function(response) {
+			            if(response.type) { // Si nos devuelve un OK la API...
+			                var data = response.data[0];
+			                if(data.nivel === 3){
+								window.location.href = 'pages_empleado/empleado.html'
+							}else if (data.nivel === 2) {
+								window.location.href = 'pages_directivo/directivo.html'
+							}else if (data.nivel === 4) {
+								window.location.href = 'pages_secretario/secretario.html'
+							}
+			            }
+			        });
 				}
 			}).
 			error(function(data, status, headers, config){

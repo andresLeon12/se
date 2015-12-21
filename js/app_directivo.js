@@ -6,6 +6,7 @@ var app = angular.module('secreto', [])
 
 app.controller('directivoController', function($scope, $http){
 	var usuario = localStorage.getItem("usuario")
+	var empresa = localStorage.getItem("empresa")
 	$scope.usuario = JSON.parse(usuario);
 	$scope.acuerdos = {}
 	$scope.personas = {}
@@ -23,7 +24,7 @@ app.controller('directivoController', function($scope, $http){
 
 	/* Obtenemos a todos los empleados */
 	function getEmpleados() {
-		$http.get(url_server+"user/usuario/Empleado").success(function(response) {
+		$http.get(url_server+"user/usuario/3/"+empresa).success(function(response) {
 	        if(response.type) { // Si nos devuelve un OK la API...
 	        	$scope.personas = response.data;
 	        }
@@ -51,7 +52,7 @@ app.controller('directivoController', function($scope, $http){
 			var htmlText = '<li><a href="acuerdo.html?id='+data._id+'"><i class="mdi-social-notifications"></i> '+data.ACUDES+'</a></li>'
 			$("#notifications-dropdown").append(htmlText);
 			Materialize.toast('Nuevo acuerdo asignado!', 4000)
-			$http.get(url_server+"acuerdo/buscar/"+myName).success(function(response) {
+			$http.get(url_server+"acuerdo/buscar/"+myName+"/"+empresa).success(function(response) {
 		        if(response.type) { // Si nos devuelve un OK la API...
 		        	total_acuerdos();
 		        }
@@ -63,7 +64,7 @@ app.controller('directivoController', function($scope, $http){
 	function total_acuerdos(){
 		var user = JSON.parse(usuario)
 		var myName = user._id;
-		$http.get(url_server+"acuerdo/buscar/"+myName).success(function(response) {
+		$http.get(url_server+"acuerdo/buscar/"+myName+"/"+empresa).success(function(response) {
 			if(response.type) { // Si nos devuelve un OK la API...
 		        $scope.acuerdos = response.data;
 		        var total_acuerdos = response.data.length;
@@ -74,6 +75,7 @@ app.controller('directivoController', function($scope, $http){
 
 	/* Método para agregar una tarea */
     $scope.nuevaTarea = function(){
+    	$scope.tarea.empresa = empresa;
     	$http.post(url_server+"tarea/crear", $scope.tarea).success(function(response) {
             if(response.status === "OK") { // Si nos devuelve un OK la API...
             	socket.emit("nueva_tarea", response.data);

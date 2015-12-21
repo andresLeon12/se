@@ -10,18 +10,22 @@
 			<script type="text/javascript" src="../js/angular.min.js"></script>
 			<script type="text/javascript" src="../js/socket.io-1.3.7.js"></script>
 			<script type="text/javascript" src="../js/materialize.min.js"></script>
-			<script type="text/javascript" src="../js/app_junta.js"></script>
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
-			<script type="text/javascript" src="../cordova.js"></script>
+			<!--<script type='text/javascript'src='../js/picker.js'></script>-->
+			<script type='text/javascript'src='../js/picker.time.js'></script>
+  			<script type="text/javascript" src="../js/app_junta.js"></script>
+			<!--<script type="text/javascript" src="../cordova.js"></script>-->
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
 			<link rel='stylesheet' href='../css/perfect-scrollbar.css'/>
 			<link rel='stylesheet' href='../css/style.min.css'/>
+			<link rel='stylesheet' type='text/css'href='../css/classic.time.css'/>
 			<style type="text/css">
 				html,body {
 				    height: 100%;
+				    width: 70%;
 				}
 				html {
 				    display: table;
@@ -61,10 +65,10 @@
     		</header>
     <!-- END HEADER -->
     <div class="container">
-    	<div id="mensaje"></div>
     	<div id="login-page" class="row">
 	    	<div class="col s12 z-depth-4 card-panel">
-	      		<form class="login-form" id="myForm" ng-submit="nuevaJunta()">
+	    		<div id="mensaje"></div>
+	      		<form ng-submit="nuevaJunta()">
 	        		<div class="row">
 	          			<div class="input-field col s12 center">
 	            			<h4>Registrar</h4>
@@ -81,8 +85,15 @@
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-editor-insert-invitation prefix"></i>
-	            			<input type="date" class="datepicker" ng-model="juntaN.JUTFEC" required>
+	            			<input type="text" class="datepicker" ng-model="juntaN.JUTFEC" required>
 							<label for="nombre">Fecha</label>
+	          			</div>
+	        		</div>
+	        		<div class="row margin">
+	          			<div class="input-field col s12">
+	            			<i class="mdi-editor-insert-invitation prefix"></i>
+	            			<input id="hora" type="text" ng-model="juntaN.JUTHOR" required >
+							<label for="hora">Hora</label>
 	          			</div>
 	        		</div>
 	        		<div class="row margin">
@@ -92,6 +103,13 @@
 							<label for="lugar">Lugar</label>
 	          			</div>
 	        		</div>
+	        		<div class="form-group">
+						<div class="input-field col s12 m12 l12">
+							<i class="mdi-editor-mode-edit prefix"></i>
+							<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="juntaN.JUTMOT" required></textarea>
+							<label for="ACUDES">Descripción</label>
+						</div>
+					</div>
 	        		<div class="row">
 	          			<div class="input-field col s12">
 	          				<input type="submit" class="btn waves-effect waves-light col s12" value="Registrar">
@@ -104,5 +122,14 @@
 	    	</div>
 	  	</div>
     </div>
+    
 </body>
+<script>
+$.datetimepicker.setLocale('es');
+$('#hora').datetimepicker({
+	datepicker:false,
+	format:'H:i',
+	step:60
+});
+</script>
 </html>		

@@ -12,13 +12,16 @@
 			<script type="text/javascript" src="../js/materialize.min.js"></script>
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
-			<script type="text/javascript" src="../js/app_junta.js"></script>
-			<script type="text/javascript" src="../cordova.js"></script>
+			<!--<script type='text/javascript'src='../js/picker.js'></script>-->
+			<script type='text/javascript'src='../js/picker.time.js'></script>
+  			<script type="text/javascript" src="../js/app_junta.js"></script>
+			<!--<script type="text/javascript" src="../cordova.js"></script>-->
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
 			<link rel='stylesheet' href='../css/perfect-scrollbar.css'/>
 			<link rel='stylesheet' href='../css/style.min.css'/>
+			<link rel='stylesheet' type='text/css'href='../css/classic.time.css'/>
 		</head>
 		<body ng-controller='juntaController'>
 			<div id="loader-wrapper">
@@ -50,27 +53,60 @@
 	      			<div class="row" style="height: 40%;"></div>
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{junta.JUTLUG}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <span class="card-title activator grey-text text-darken-4">{{junta.JUTMOT}}<i class="mdi-editor-mode-edit right"></i></span>
 				    <p><a href="#" ng-click="deleteJunta(junta._id)"><i class="mdi-action-delete"></i> Eliminar</a></p>
+				    
+				    <button onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button>
+				    <div class="row"></div>
+				    <div class="row margin" id="invitados" style="display:none">
+		          		<div class="col s12">
+		            		<i class="mdi-content-sort"></i>
+		            		<label for="clave">Lista de usuarios</label>
+		            		<select multiple="" class="browser-default" ng-model='invitados'>
+		            			<option ng-repeat='usuario in directivos' value="usuario._id">{{usuario.nombreC}}</option>
+		            		</select>
+		          		</div>
+		          		<div class="row"></div>
+		          		<div class="col s12">
+		            		<button ng-click='invitar()' type="button" class="btn">Enviar invitación</button>
+		          		</div>
+		        	</div>
 	    		</div>
 	    		<div class="card-reveal">
 	      			<span class="card-title grey-text text-darken-4">Actualizar información<i class='mdi-navigation-close right'></i></span>
-	      			<form class="form-horizontal" role="form" ng-submit="updateJunta()">					    <div class="form-group">
-							<label for="ACUCJU">Clave de la junta</label>
+	      			<form class="form-horizontal" role="form" ng-submit="updateJunta()">
+		        		<div class="row margin">
+		          			<div class="col s12">
+		            			<i class="mdi-content-sort"></i>
+		            			<label for="clave">Clave</label>
+		            			<input type="text" class="form-control" ng-model="junta.JUTCVE" required>
+		          			</div>
+		        		</div>
+		        		<div class="row margin">
+		          			<div class="col s12">
+		            			<i class="mdi-editor-insert-invitation"></i>
+		            			<label for="">Fecha</label>
+		            			<input type="text" class="datepicker" ng-model="junta.JUTFEC" required>
+		          			</div>
+		        		</div>
+		        		<div class="row margin">
+		          			<div class="col s12">
+		            			<i class="mdi-editor-insert-invitation"></i>
+		            			<label for="hora1">Hora</label>
+		            			<input id="hora1" type="text" ng-model="junta.JUTHOR" required >
+		          			</div>
+		        		</div>
+		        		<div class="row margin">
+		          			<div class="col s12">
+		            			<i class="mdi-maps-navigation"></i>
+		            			<label for="lugar">Lugar</label>
+		            			<input type="text" class="form-control" ng-model="junta.JUTLUG" required>
+		          			</div>
+		        		</div>
+		        		<div class="form-group">
 							<div class="col s12 m12 l12">
-								<input class="form-control" id="ACUCJU" type="text" class="validate" ng-model="junta.JUTCVE" required>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="ACUCON">Consecutivo</label>
-							<div class="col s12 m12 l12">
-								<input type="date" class="datepicker" ng-model="junta.JUTFEC" required>
-							</div>
-						</div>
-						<div class="form-group">
-							<label for="ACUNAC">Número de acuerdo</label>
-							<div class="col s12 m12 l12">
-								<input type="text" class="form-control" ng-model="junta.JUTLUG" required>
+								<label for="ACUDES">Descripción</label>
+								<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="junta.JUTMOT" required></textarea>
 							</div>
 						</div>
 					    <div class="form-group">
@@ -81,5 +117,12 @@
 	  		</div>
   		</div>
     </div>
-</body>
+    <script>
+	$.datetimepicker.setLocale('es');
+	$('#hora1').datetimepicker({
+		datepicker:false,
+		format:'H:i',
+		step:60
+	});
+	</script>
 </html>		

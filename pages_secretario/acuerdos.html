@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_secretario.js"></script>
-			<script type="text/javascript" src="../cordova.js"></script>
+			<!--<script type="text/javascript" src="../cordova.js"></script>-->
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -52,6 +52,7 @@
             <section id="content">
             	<div class="container">
             		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Puestos</blockquote>
+            		<div id="mensaje"></div>
             		<ul class="collection" ng-repeat='acuerdo in acuerdos' style="margin-bottom:0;margin-top:0;">
             			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
             				<a href="acuerdo.html?id={{acuerdo._id}}">

@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_junta.js"></script>
-			<script type="text/javascript" src="../cordova.js"></script>
+			<!--<script type="text/javascript" src="../cordova.js"></script>-->
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -52,17 +52,16 @@
             <section id="content">
             	<div class="container">
             		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Juntas</blockquote>
-            		<div id="mensaje"></div>
+            		<div id="error"></div>
             		<ul class="collection" ng-repeat='junta in juntas' style="margin-bottom:0;margin-top:0;">
             			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
             				<a href="junta.html?id={{junta._id}}">
-								<i class='mdi-action-description circle green'></i>
+								<i class='mdi-action-group-work circle green'></i>
 								<span class='title'>
 									{{junta.JUTCVE}}
 								</span>
 								<p style="color: grey">
-									{{junta.JUTLUG}}	
-									{{junta.JUTFEC}}
+									{{junta.JUTMOT}}
 								</p>
 							</a>
 						</li>

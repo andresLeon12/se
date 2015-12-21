@@ -12,6 +12,7 @@ app.controller('secretarioController', function($scope, $http){
     var lastUsuarioAcuerdo // variable para saber que usuario tiene a cargo un acuerdo
 
 	var usuario = localStorage.getItem("usuario")
+    var empresa = localStorage.getItem("empresa")
 	$scope.usuario = JSON.parse(usuario);
     /* Obtenemos los parametros de la url */
     var edit = getUrlParameter('id');
@@ -26,7 +27,7 @@ app.controller('secretarioController', function($scope, $http){
 
 	/* Obtenemos a todos los directivos */
 	function getDirectivos() {
-		$http.get(url_server+"user/usuario/Directivo").success(function(response) {
+		$http.get(url_server+"user/usuario/2/"+empresa).success(function(response) {
 	        if(response.type) { // Si nos devuelve un OK la API...
 	        	$scope.directivos = response.data;
 	        }
@@ -35,12 +36,12 @@ app.controller('secretarioController', function($scope, $http){
 	
     /* Obtenemos la lista de acuerdos */
     function getAcuerdos() {
-    	$http.get(url_server+"acuerdo/listar").success(function(response) {
+    	$http.get(url_server+"acuerdo/listar/"+empresa).success(function(response) {
 	        if(response.status == 'OK') { // Si nos devuelve un OK la API...
 	        	$scope.acuerdos = response.data;
 	        	if($scope.acuerdos.length == 0){
 					$("#mensaje").empty();
-					$("#mensaje").append('<div class="chip">Aún no hay acuerdos<i class="material-icons">Cerrar</i></div>');
+					$("#mensaje").append('<div class="row"><div class="col s12 m12 l12"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops</span><p>Aún no hay acuerdos registrados en el sistema.</p></div></div></div></div>');
 					$("#mensaje").css('color', '#d50000');
 				}else{
 	                $("#mensaje").empty();
