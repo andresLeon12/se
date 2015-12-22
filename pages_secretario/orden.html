@@ -14,7 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<!--<script type='text/javascript'src='../js/picker.js'></script>-->
 			<script type='text/javascript'src='../js/picker.time.js'></script>
-  			<script type="text/javascript" src="../js/app_junta.js"></script>
+  			<script type="text/javascript" src="../js/app_orden.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
@@ -23,7 +23,7 @@
 			<link rel='stylesheet' href='../css/style.min.css'/>
 			<link rel='stylesheet' type='text/css'href='../css/classic.time.css'/>
 		</head>
-		<body ng-controller='juntaController'>
+		<body ng-controller='ordenController'>
 			<div id="loader-wrapper">
 		        <div id="loader"></div>        
 		        <div class="loader-section section-left"></div>
@@ -36,7 +36,7 @@
             		<nav class="navbar-color">
                 		<div class="nav-wrapper">
                     		<ul class="left">                      
-                    			<li><a href="juntas_de_trabajo.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li>
+                    			<li><a href="orden_del_dia.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li>
                       			<li><h1 class="logo-wrapper"><a href="secretario.html" class="brand-logo darken-1"><img src="../img/logo.png" alt=""></a> <span class="logo-text">SECRETO</span></h1></li>
                     		</ul>
 	                	</div>
@@ -47,71 +47,76 @@
     <!-- END HEADER -->
     <div class="container">
     	<div id="mensaje" style="margin-left:35%;margin-top:5%;"></div>
-    	<div ng-if='junta._id'>
+    	<div ng-if='orden._id'>
 			<div class="card large">
 	    		<div class="card-image waves-effect waves-block waves-light red">
 	      			<div class="row" style="height: 40%;"></div>
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{junta.JUTMOT}}<i class="mdi-editor-mode-edit right"></i></span>
-				    <p><a href="#" ng-click="deleteJunta(junta._id)"><i class="mdi-action-delete"></i> Eliminar</a></p>
-				    <div ng-if='junta.JUTINV.length == 0'>
-					    <button id="boton_invitados" onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button>
-					    <div class="row"></div>
-					    <div class="row margin" id="invitados" style="display:none">
-			          		<div class="col s12">
-			            		<i class="mdi-content-sort"></i>
-			            		<label for="clave">Lista de usuarios</label>
-			            		<select id="myselection" multiple="true" class="browser-default" ng-model="invitados" ng-options="c.nombreC for c in directivos"></select>
-			          		</div>
-			          		<div class="row"></div>
-			          		<div class="col s12">
-			            		<button ng-click='invitar(invitados, junta)' type="button" class="btn">Enviar invitación</button>
-			          		</div>
-			        	</div>
-		        	</div>
-		        	<div ng-if='junta.JUTINV.length > 0'>
-		        		<h5>Invitados a la junta</h5>
-		        		<ul class="collection">
-		        			<li ng-repeat='inv in junta.JUTINV'>{{inv.nombre}}-{{inv.id}}</li>
-		        		</ul>
-		        	</div>
+				    <span class="card-title activator grey-text text-darken-4">{{orden.ORDMOT}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <!--p><a href="#" ng-click="deleteOrden(orden._id)"><i class="mdi-action-delete"></i> Eliminar</a></p-->
+				    <p><a href="#" id="eliminar"><i class="mdi-action-delete"></i> Eliminar</a></p>
+				    <!--button onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button-->
+				    <div class="row"></div>
+				    <!--div class="row margin" id="invitados" style="display:none">
+		          		<div class="col s12">
+		            		<i class="mdi-content-sort"></i>
+		            		<label for="clave">Lista de usuarios</label>
+		            		<select multiple="" class="browser-default" ng-model='invitados'>
+		            			<option ng-repeat='usuario in directivos' value="usuario._id">{{usuario.nombreC}}</option>
+		            		</select>
+		          		</div>
+		          		<div class="row"></div>
+		          		<div class="col s12">
+		            		<button ng-click='invitar()' type="button" class="btn">Enviar invitación</button>
+		          		</div>
+		        	</div-->
 	    		</div>
+
+	    		<div id="delete" class="modal bottom-sheet">
+					<div class="modal-content">
+						<div class="row">
+							<div class="col s3">
+								<h4 id="nomActivo" class="grey-text"></h4>
+							</div>
+						</div>
+						<p>Realmente desea eliminar {{orden.ORDMOT}}</p>
+					</div>
+					<div class="modal-footer">
+						<a class="modal-action modal-close wavs-effects wavs-green btn-flat">Cancelar</a>
+						<a href="#" class="wavs-effects wavs-green btn-flat" ng-click="deleteOrden(orden._id)"><i class="mdi-action-delete"></i> Eliminar</a>
+					</div>
+				</div>
+
 	    		<div class="card-reveal">
 	      			<span class="card-title grey-text text-darken-4">Actualizar información<i class='mdi-navigation-close right'></i></span>
-	      			<form class="form-horizontal" role="form" ng-submit="updateJunta()">
+	      			<form class="form-horizontal" role="form" ng-submit="updateOrden()">
 		        		<div class="row margin">
-		          			<div class="col s12">
+		        			<div class="input-field col s12">
+		            			<i class="mdi-content-sort"></i>
+			            		<label for="clave">Lista de Juntas</label>
+			            		<select class="browser-default" ng-model='orden.CLVJUT'>
+			            			<option ng-repeat='junta in juntas' value="{{junta._id}}">{{junta.JUTCVE}}</option>
+			            		</select>
+		          			</div>
+		          			<!--div class="col s12">
 		            			<i class="mdi-content-sort"></i>
 		            			<label for="clave">Clave</label>
 		            			<input type="text" class="form-control" ng-model="junta.JUTCVE" required>
-		          			</div>
+		          			</div-->
 		        		</div>
 		        		<div class="row margin">
 		          			<div class="col s12">
-		            			<i class="mdi-editor-insert-invitation"></i>
-		            			<label for="">Fecha</label>
-		            			<input type="text" class="datepicker" ng-model="junta.JUTFEC" required>
-		          			</div>
-		        		</div>
-		        		<div class="row margin">
-		          			<div class="col s12">
-		            			<i class="mdi-editor-insert-invitation"></i>
-		            			<label for="hora1">Hora</label>
-		            			<input id="hora1" type="text" ng-model="junta.JUTHOR" required >
-		          			</div>
-		        		</div>
-		        		<div class="row margin">
-		          			<div class="col s12">
-		            			<i class="mdi-maps-navigation"></i>
-		            			<label for="lugar">Lugar</label>
-		            			<input type="text" class="form-control" ng-model="junta.JUTLUG" required>
+		            			<i class="mdi-editor-insert-invitation prefix"></i>
+		            			<label >Numero de Orden</label>
+		            			<input type="number" min="1" max="99" class="" ng-model="orden.ORDNUM" required>
 		          			</div>
 		        		</div>
 		        		<div class="form-group">
 							<div class="col s12 m12 l12">
+								<i class="mdi-editor-mode-edit prefix"></i>
 								<label for="ACUDES">Descripción</label>
-								<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="junta.JUTMOT" required></textarea>
+								<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="orden.ORDMOT" required></textarea>
 							</div>
 						</div>
 					    <div class="form-group">
@@ -119,6 +124,7 @@
 						</div>  
 				    </form>  
 	    		</div>
+
 	  		</div>
   		</div>
     </div>

@@ -1,4 +1,4 @@
-var url_server = 'http://192.168.1.103:8080/';
+var url_server = 'http://159.203.128.165:8080/';
 var socket = io.connect(url_server);
 
 /* Controlador para secretario */
@@ -59,15 +59,49 @@ app.controller('directivoController', function($scope, $http){
 		    });
 		};
 	});
+	/* Funcion de escucha ante una nueva junta */
+	socket.on("nueva_junta", function (idj, motivo, id) {
+		var myName = $("#nombre_usuario").val();
+		if (myName == id) {
+			var numNotificaciones = parseInt($(".noti").text())
+			numNotificaciones++;
+			$(".noti").html(numNotificaciones)
+			$("#noti").html(numNotificaciones)
+			$("#nothing").empty();
+			var htmlText = '<li><a href="junta.html?id='+idj+'"><i class="mdi-social-notifications"></i> '+motivo+'</a></li>'
+			$("#notifications-dropdown").append(htmlText);
+			Materialize.toast('Nueva junta de trabajo!', 4000)
+			/*$http.get(url_server+"acuerdo/buscar/"+myName+"/"+empresa).success(function(response) {
+		        if(response.type) { // Si nos devuelve un OK la API...
+		        	total_acuerdos();
+		        }
+		    });*/
+		};
+	});
 
 	/* Metodo para obtener la cantidad de acuerdos del usuario */
 	function total_acuerdos(){
 		var user = JSON.parse(usuario)
 		var myName = user._id;
-		$http.get(url_server+"acuerdo/buscar/"+myName+"/"+empresa).success(function(response) {
+		$http.get(url_server+"acuerdo/buscar/"+myName).success(function(response) {
 			if(response.type) { // Si nos devuelve un OK la API...
 		        $scope.acuerdos = response.data;
 		        var total_acuerdos = response.data.length;
+		        $("#num-notifications").html(total_acuerdos);
+		        total_juntas();
+		    }
+		});
+	}
+
+	/* Metodo para obtener la cantidad de juntas del usuario */
+	function total_juntas(){
+		var user = JSON.parse(usuario)
+		var myName = user._id;
+		$http.get(url_server+"junta/buscar/"+myName).success(function(response) {
+			if(response.type) { // Si nos devuelve un OK la API...
+		        $scope.juntas = response.data;
+		        var total_acuerdos = response.data.length;
+		        var total = total_acuerdos + parseInt($("#num-notifications").text())
 		        $("#num-notifications").html(total_acuerdos);
 		    }
 		});

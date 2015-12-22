@@ -10,15 +10,18 @@
 			<script type="text/javascript" src="../js/angular.min.js"></script>
 			<script type="text/javascript" src="../js/socket.io-1.3.7.js"></script>
 			<script type="text/javascript" src="../js/materialize.min.js"></script>
-			<script type="text/javascript" src="../js/app_secretario.js"></script>
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
+			<!--<script type='text/javascript'src='../js/picker.js'></script>-->
+			<script type='text/javascript'src='../js/picker.time.js'></script>
+  			<script type="text/javascript" src="../js/app_orden.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
 			<link rel='stylesheet' href='../css/perfect-scrollbar.css'/>
 			<link rel='stylesheet' href='../css/style.min.css'/>
+			<link rel='stylesheet' type='text/css'href='../css/classic.time.css'/>
 			<style type="text/css">
 				html,body {
 				    height: 100%;
@@ -39,7 +42,7 @@
 				}
 			</style>
 		</head>
-		<body ng-controller='secretarioController'>
+		<body ng-controller='ordenController'>
 			<div id="loader-wrapper">
 		        <div id="loader"></div>        
 		        <div class="loader-section section-left"></div>
@@ -62,83 +65,60 @@
     		</header>
     <!-- END HEADER -->
     <div class="container">
-    	<div id="error"></div>
     	<div id="login-page" class="row">
 	    	<div class="col s12 z-depth-4 card-panel">
-	      		<form id="myForm" ng-submit="nuevoAcuerdo()">
+	    		<div id="mensaje"></div>
+	      		<form ng-submit="nuevaOrden()">
 	        		<div class="row">
 	          			<div class="input-field col s12 center">
 	            			<h4>Registrar</h4>
-	            			<p class="center">Agrega nuevo acuerdo de junta</p>
+	            			<p class="center">Agregar nueva Orden del Día</p>
+	          			</div>
+	        		</div>
+	        		<div class="row margin">
+	        			<div class="input-field col s12">
+	            			<i class="mdi-content-sort"></i>
+		            		<label for="clave">Lista de Juntas</label>
+		            		<select class="browser-default" ng-model='ordenN.CLVJUT'>
+		            			<option ng-repeat='junta in juntas' value="{{junta._id}}">{{junta.JUTCVE}}</option>
+		            		</select>
 	          			</div>
 	        		</div>
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="text" class="form-control" ng-model="acuerdoN.ACUCJU" required>
-							<label for="clave">Clave</label>
-	          			</div>
-	        		</div>
-	        		<div class="row margin">
-	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUCON" required>
-							<label for="clave">Consecutivo</label>
-	          			</div>
-	        		</div>
-	        		<div class="row margin">
-	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUNAC" required>
-							<label for="clave">Número de acuerdo</label>
+	            			<i class="mdi-editor-insert-invitation prefix"></i>
+	            			<input type="number" min="1" max="99" class="" ng-model="ordenN.ORDNUM" required>
+							<label for="nombre">Numero de Orden</label>
 	          			</div>
 	        		</div>
 	        		<div class="form-group">
-				                	<label class="col-sm-1 control-label">Directivo a cargo</label>
-				                	<div class="col-sm-12">
-				                  		<select class="browser-default" ng-model="acuerdoN.ACUCPE" required>
-				                    		<option ng-repeat="d in directivos" value="{{d._id}}">{{d.nombreC}}</option>
-				                  		</select>
-				                	</div>
-				             	</div>
-				    <div class="form-group">
-							    	<label for="ACUDES">Descripción</label>
-							        <div class="col s12 m12 l12">
-							        	<textarea class="form-control" id="ACUDES" class="validate" ng-model="acuerdoN.ACUDES" required></textarea>
-							        </div>
-						        </div>
-					<div class="row margin">
-	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUTIM" required>
-							<label for="clave">Días</label>
-	          			</div>
-	        		</div>
-	        		<div class="row margin">
-	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="text" class="form-control" ng-model="acuerdoN.ACUENT" required>
-							<label for="clave">Entregable</label>
-	          			</div>
-	        		</div>
-	        		<div class="row margin">
-	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUPRE" step='0.01' required>
-							<label for="clave">Presupuesto</label>
-	          			</div>
-	        		</div>
+						<div class="input-field col s12 m12 l12">
+							<i class="mdi-editor-mode-edit prefix"></i>
+							<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="ordenN.ORDMOT" required></textarea>
+							<label for="ACUDES">Descripción</label>
+						</div>
+					</div>
 	        		<div class="row">
 	          			<div class="input-field col s12">
 	          				<input type="submit" class="btn waves-effect waves-light col s12" value="Registrar">
 	          			</div>
 	          			<div class="input-field col s12">
-	            			<p class="margin center medium-small sign-up"> <a href="secretario.html">Cancelar</a></p>
+	            			<p class="margin center medium-small sign-up"> <a href="../index.html">Cancelar</a></p>
 	          			</div>
+	          			<div class="input-field col s12"><div class="chip"><a href="orden_del_dia.html">Ver Todas las Ordenes del dia</a></div></div>
 	        		</div>
 	      		</form>
 	    	</div>
 	  	</div>
     </div>
+    
 </body>
+<script>
+$.datetimepicker.setLocale('es');
+$('#hora').datetimepicker({
+	datepicker:false,
+	format:'H:i',
+	step:60
+});
+</script>
 </html>		

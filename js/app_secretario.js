@@ -1,4 +1,4 @@
-var url_server = 'http://192.168.1.103:8080/';
+var url_server = 'http://159.203.128.165:8080/';
 var socket = io.connect(url_server);
 /* Controlador para secretario */
 var app = angular.module('secreto', [])
@@ -62,12 +62,13 @@ app.controller('secretarioController', function($scope, $http){
 
     /* Método para agregar un acuerdo */
     $scope.nuevoAcuerdo = function(){
+        $scope.acuerdoN.empresa = empresa
     	$http.post(url_server+"acuerdo/crear", $scope.acuerdoN).success(function(response) {
             if(response.status === "OK") { // Si nos devuelve un OK la API...
             	socket.emit("nuevo_acuerdo", response.data);
-                $("#mensaje").empty();
-                $("#mensaje").append('<div class="chip">Acuerdo agregado<i class="material-icons">Cerrar</i></div>');
-                $("#mensaje").css('color', '#FFF');
+                $("#error").empty();
+                $("#error").append('<div class="chip">Acuerdo agregado<i class="material-icons">Cerrar</i></div>');
+                $("#error").css('color', '#FFF');
                 $scope.acuerdoN = {}; // Limpiamos el scope
             }
         });
@@ -79,9 +80,9 @@ app.controller('secretarioController', function($scope, $http){
         $http.delete(url_server+"acuerdo/eliminar", { params : {identificador: id}}).success(function(response) {
             if(response.status === "OK") { // Si la API nos devuelve un OK...
                 socket.emit('acuerdo_removido', lastUsuarioAcuerdo, acuerdo.ACUDES)
-                $("#mensaje").empty();
-                $("#mensaje").append('<div class="chip">Acuerdo eliminado <a href="acuerdos.html">Volver a lista de acuerdos</a></div>');
-                $("#mensaje").css('color', '#FFF');
+                $("#error").empty();
+                $("#error").append('<div class="chip">Acuerdo eliminado <a href="acuerdos.html">Volver a lista de acuerdos</a></div>');
+                $("#error").css('color', '#FFF');
                 $(".card-reveal").fadeOut()
                 $scope.acuerdo = {}
             }
@@ -95,9 +96,9 @@ app.controller('secretarioController', function($scope, $http){
         delete acuerdo._id
         $http.put(url_server+"acuerdo/actualizar", acuerdo).success(function(response) {
             if(response.status === "OK") {
-                $("#mensaje").empty();
-                $("#mensaje").append('<div class="chip">Información actualizada <i class="material-icons">Cerrar</i></div>');
-                $("#mensaje").css('color', '#FFF');
+                $("#error").empty();
+                $("#error").append('<div class="chip">Información actualizada <i class="material-icons">Cerrar</i></div>');
+                $("#error").css('color', '#FFF');
                 $(".card-reveal").fadeOut()
                 if (acuerdo.ACUCPE == lastUsuarioAcuerdo) {
                     socket.emit('acuerdo_actualizado', acuerdo)

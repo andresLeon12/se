@@ -12,7 +12,7 @@
 			<script type="text/javascript" src="../js/materialize.min.js"></script>
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
-			<script type="text/javascript" src="../js/app_junta.js"></script>
+			<script type="text/javascript" src="../js/app_orden.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
@@ -20,7 +20,7 @@
 			<link rel='stylesheet' href='../css/perfect-scrollbar.css'/>
 			<link rel='stylesheet' href='../css/style.min.css'/>
 		</head>
-		<body ng-controller='juntaController'>
+		<body ng-controller='ordenController'>
 			<div id="loader-wrapper">
 		        <div id="loader"></div>        
 		        <div class="loader-section section-left"></div>
@@ -51,22 +51,30 @@
         <div class="wrapper">
             <section id="content">
             	<div class="container">
-            		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Juntas</blockquote>
+            		<blockquote style="border-left: 5px solid #ee6e73;">Ordenes del Día</blockquote>
             		<div id="error"></div>
-            		<ul class="collection" ng-repeat='junta in juntas' style="margin-bottom:0;margin-top:0;">
+            		<ul class="collection" ng-repeat='orden in ordenes' style="margin-bottom:0;margin-top:0;">
             			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
-            				<a href="junta.html?id={{junta._id}}">
+            				<a href="orden.html?id={{orden._id}}">
 								<i class='mdi-action-group-work circle green'></i>
 								<span class='title'>
-									{{junta.JUTCVE}}
+									{{orden.ORDNUM}}
 								</span>
 								<p style="color: grey">
-									{{junta.JUTMOT}}
+									{{orden.ORDMOT}}<br>
+								</p>
+								<!--td ng-repeat="p in puest" ng-if="p._id == usuario.puesto">
+						            {{p.nombreP}}
+						        </td-->
+						        <!-- Ponlos asi para que se actualice tambien el nombre de la clave foranea...sino no se actualiza weon  -->
+								<p ng-repeat="j in juntas" ng-if="j._id == orden.CLVJUT">
+									{{j.JUTMOT}}<br>
 								</p>
 							</a>
 						</li>
             		</ul>
             	</div>
+            	<div class="input-field col s12"><div class="chip"><a href="nueva_orden.html">Agregar nueva orden.</a></div></div>
             </section>
 		</body>
 		</html>		

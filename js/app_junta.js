@@ -1,7 +1,8 @@
 /* Controllers */
 
 var app = angular.module('secreto', [])
-var url_server = 'http://192.168.1.103:8080/';
+var url_server = 'http://159.203.128.165:8080/';
+var socket = io.connect(url_server);
 
 $(document).on("click", ".modal-trigger", function(){
     var id = $(this).attr("id");
@@ -47,7 +48,7 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
                 if(response.status === "OK") { // Si la API nos devuelve un OK...
                     //$('#'+id+"-Delete").modal('hide');
                     $("#mensaje").empty();
-                    $("#mensaje").append('<div class="chip">Junta eliminada <a href="acuerdos.html">Volver a lista de acuerdos</a></div>');
+                    $("#mensaje").append('<div class="chip">Junta eliminada <a href="juntas_de_trabajo.html">Volver a lista de juntas</a></div>');
                     $("#mensaje").css('color', '#FFF');
                     $(".card-reveal").fadeOut()
                     $scope.junta = {}
@@ -67,6 +68,37 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
                 if(response.status === "OK") {
                     $("#mensaje").empty();
                     $("#mensaje").append('<div class="chip">Información actualizada <i class="material-icons">Cerrar</i></div>');
+                    $("#mensaje").css('color', '#FFF');
+                    $(".card-reveal").fadeOut()
+                    getJuntaUnica(); // Actualizamos la lista de ToDo's
+                }
+            });
+        }
+        // Función para enviar invitacion a usuarios
+        $scope.invitar = function(invitados, junta_info) {
+            var empleados_invitados = '['
+            for (var i = 0; i < invitados.length; i++){
+                empleados_invitados += '{ "id":"'+invitados[i]._id+'",';
+                empleados_invitados += '"nombre":"'+invitados[i].nombreC+'"';
+                empleados_invitados += '}';
+                if (i < invitados.length - 1)
+                    empleados_invitados += ','
+                socket.emit("nueva_junta", junta_info._id, invitados[i]._id, junta_info.JUTMOT);
+            }
+            empleados_invitados += ']';
+            //var invitaciones1 = JSON.stringify(empleados_invitados)
+            var invitaciones = JSON.parse(empleados_invitados)
+            alert(invitaciones)
+            var junta = $scope.junta;
+            junta.JUTINV = invitaciones;
+            junta.id = junta._id; // Pasamos la _id a id para mayor comodidad del lado del servidor a manejar el dato.
+            delete junta._id; // Lo borramos para evitar posibles intentos de modificación de un ID en la base de datos
+            //alert("Id "+junta.id+" email "+junta.email);
+            // Hacemos una petición PUT para hacer el update a un documento de la base de datos.
+            $http.put(url_server+"junta/actualizar", junta).success(function(response) {
+                if(response.status === "OK") {
+                    $("#mensaje").empty();
+                    $("#mensaje").append('<div class="chip">Invitaciones enviadas <i class="material-icons">Cerrar</i></div>');
                     $("#mensaje").css('color', '#FFF');
                     $(".card-reveal").fadeOut()
                     getJuntaUnica(); // Actualizamos la lista de ToDo's
@@ -95,6 +127,13 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
             $http.get(url_server+"junta/find/"+edit).success(function(response) {
                 if(response.type) { // Si nos devuelve un OK la API...
                     $scope.junta = response.data[0];
+                    //$scope.junta.JUTINV = JSON.parse($scope.junta.JUTINV)
+                    if ($scope.junta.JUTINV.length == 0) {
+                        $("#boton_invitados").show()
+                        //$("#invitados").show()
+                    }else{
+                        $("#boton_invitados").empty()
+                    }
                     getDirectivos();
                 }
             });
@@ -102,29 +141,17 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
 
         /* Obtenemos a todos los directivos */
         function getDirectivos() {
+            //var invitados_lista = $scope.junta.JUTINV;
             $http.get(url_server+"user/usuario/2/"+empresa).success(function(response) {
                 if(response.type) { // Si nos devuelve un OK la API...
                     $scope.directivos = response.data;
                 }
-            });
+            })
             $http.get(url_server+"user/usuario/1/"+empresa).success(function(response) {
                 if(response.type) { // Si nos devuelve un OK la API...
                     $scope.director = response.data;
                 }
             });
-            /*$scope.invitados = []
-            for(var i=0;i<arr.length;i++){
-                alert(i)
-                //$scope.invitados.push($scope.directivos[i])
-            }
-            for(i=0;i<$scope.director.length;i++){
-                //$scope.invitados.push($scope.director[i])
-            }*/
-            /*for(i=0;i<$scope.junta.JUTINV.length;i++){
-                if($scope.invitados.indexOf($scope.junta.JUTINV) >= 0)
-                    $scope.invitados.splice($scope.invitados.indexOf($scope.junta.JUTINV),1)
-            }*/
-            alert("Total de invitados "+$scope.invitados)
         }
 
         function addZero(i) {

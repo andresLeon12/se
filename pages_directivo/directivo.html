@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_directivo.js"></script>
-			<!--<script type="text/javascript" src="../cordova.js"></script>-->
+			<script type="text/javascript" src="../cordova.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -82,7 +82,19 @@
 				                                </div>
 				                            </div>
 				                        </li>
-				                        
+				                        <li class="active">
+				                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Juntas de trabajo</div>
+				                            <div class="collapsible-body recent-activity" style="display: block;">
+				                                <div ng-repeat='junta in juntas' class="recent-activity-list chat-out-list row">
+				                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
+				                                    </div>
+				                                    <div class="col s9 recent-activity-list-text">
+				                                        <a href="junta.html?id={{junta._id}}">{{junta.JUTLUG}}</a>
+				                                        <p style="color:black">{{junta.JUTMOT}}</p>
+				                                    </div>
+				                                </div>
+				                            </div>
+				                        </li>
 				                        </ul>
 				                    </li>
 				                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 3px;"><div class="ps-scrollbar-x" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 646px; right: 3px;"><div class="ps-scrollbar-y" style="top: 0px; height: 591px;"></div></div></ul>
@@ -121,10 +133,6 @@
 		                    </div>
                 		</div>
             		</li>
-	                <li class="bold"><a href="#" class="waves-effect waves-cyan"><i class="mdi-communication-email"></i> Mensajes <span class="new badge">0</span></a>
-	                </li>
-	                <li class="bold"><a href="pages/calendario.html" class="waves-effect waves-cyan"><i class="mdi-editor-insert-invitation"></i> Calendario</a>
-	                </li>
                     <!--<li class="no-padding">
 	                    <ul class="collapsible collapsible-accordion">
 	                        <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i class="mdi-action-group-work"></i> Juntas</a></a>
