@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_directivo.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -37,9 +38,10 @@
                     		</ul>
 	                    	<ul class="right">
 	                        	<li>
-	                        		<a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-social-notifications"><small class="notification-badge noti">0</small></i></a>
+	                        		<a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown"><i class="mdi-action-work"><small class="notification-badge noti">0</small></i></a>
 	                        	</li>                        
-	                        	<li><a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse"><i class="mdi-communication-chat"></i></a>
+	                        	<li>
+	                        		<a href="javascript:void(0);" class="waves-effect waves-block waves-light notification-button" data-activates="notifications-dropdown-acuerdos"><i class="mdi-action-stars"><small class="notification-badge noti2">0</small></i></a>
 	                        	</li>
 	                    	</ul>
 	                    	<!-- notifications-dropdown -->
@@ -47,12 +49,61 @@
 	                      		<li>
 	                        		<h5>NOTIFICACIONES <span class="new badge" id='noti'>0</span></h5>
 	                      		</li>
+	                      		<li>
+	                      			<a href="#" data-activates="lista_juntas" class="waves-effect waves-block waves-light chat-collapse"><i class="mdi-action-visibility"></i> Ver todas</a>
+	                      		</li>
 	                      		<li class="divider"></li>
 	                      		<li id="nothing">
 	                        		<a href="#!"><i class="mdi-social-notifications"></i> No tienes notificaciones</a>
 	                        		<!--<time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time>-->
 	                      		</li>
 	                    	</ul>
+	                    	<ul id="notifications-dropdown-acuerdos" class="dropdown-content">
+	                      		<li>
+	                        		<h5>NOTIFICACIONES <span class="new badge" id='noti2'>0</span></h5>
+	                      		</li>
+	                      		<li>
+	                      			<a href="#" data-activates="chat-out" class="waves-effect waves-block waves-light chat-collapse"><i class="mdi-action-visibility"></i> Ver todas</a>
+	                      		</li>
+	                      		<li class="divider"></li>
+	                      		<li id="nothing2">
+	                        		<a href="#!"><i class="mdi-social-notifications"></i> No tienes notificaciones</a>
+	                        		<!--<time class="media-meta" datetime="2015-06-12T20:50:48+08:00">2 hours ago</time>-->
+	                      		</li>
+	                    	</ul>
+	                    	<aside id="right-sidebar-nav">
+				                <ul id="lista_juntas" class="side-nav rightside-navigation right-aligned ps-container ps-active-y" style="width: 300px; right: 0px; height: 706px;">
+				                    <li class="li-hover">
+				                    <a href="#" data-activates="lista_juntas" class="chat-close-collapse right"><i class="mdi-navigation-close"></i></a>
+				                    <div id="right-search" class="row">
+				                        <form class="col s12">
+				                            <div class="input-field">
+				                                <i class="mdi-action-search prefix"></i>
+				                                <input id="icon_prefix" type="text" style="color:black;font-size:0.9rem" class="validate" ng-model='busqueda'>
+				                                <label for="icon_prefix" class="">Buscar</label>
+				                            </div>
+				                        </form>
+				                    </div>
+				                    </li>
+				                    <li class="li-hover">
+				                        <ul class="chat-collapsible" data-collapsible="expandable">
+				                        <li class="active">
+				                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Juntas de trabajo</div>
+				                            <div class="collapsible-body recent-activity" style="display: block;">
+				                                <div ng-repeat='junta in juntas|filter:busqueda' class="recent-activity-list chat-out-list row">
+				                                    <!--<div style="color:black" class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
+				                                    </div>-->
+				                                    <div class="col s12 m12 l12 recent-activity-list-text" style='max-height:70px;overflow:auto;'>
+				                                        <a style='text-align:center' href="junta.html?id={{junta._id}}">{{junta.JUTLUG}} - {{junta.JUTFEC}}</a>
+				                                        <span style="color:black;font-size:0.9rem;position:relative;top:-15px;">{{junta.JUTMOT}}</span>
+				                                    </div>
+				                                </div>
+				                            </div>
+				                        </li>
+				                        </ul>
+				                    </li>
+				                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 3px;"><div class="ps-scrollbar-x" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 646px; right: 3px;"><div class="ps-scrollbar-y" style="top: 0px; height: 591px;"></div></div></ul>
+				            </aside>
 	                    	<aside id="right-sidebar-nav">
 				                <ul id="chat-out" class="side-nav rightside-navigation right-aligned ps-container ps-active-y" style="width: 300px; right: 0px; height: 706px;">
 				                    <li class="li-hover">
@@ -69,32 +120,17 @@
 				                    </li>
 				                    <li class="li-hover">
 				                        <ul class="chat-collapsible" data-collapsible="expandable">
-				                        <li class="active">
-				                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Acuerdos asignados</div>
-				                            <div class="collapsible-body recent-activity" style="display: block;">
-				                                <div ng-repeat='acuerdo in acuerdos' class="recent-activity-list chat-out-list row">
-				                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
-				                                    </div>
-				                                    <div class="col s9 recent-activity-list-text">
-				                                        <a href="acuerdo.html?id={{acuerdo._id}}">{{acuerdo.ACUCJU}}</a>
-				                                        <p style="color:black">{{acuerdo.ACUDES}}</p>
-				                                    </div>
-				                                </div>
-				                            </div>
-				                        </li>
-				                        <li class="active">
-				                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Juntas de trabajo</div>
-				                            <div class="collapsible-body recent-activity" style="display: block;">
-				                                <div ng-repeat='junta in juntas' class="recent-activity-list chat-out-list row">
-				                                    <div class="col s3 recent-activity-list-icon"><i class="mdi-action-add-shopping-cart"></i>
-				                                    </div>
-				                                    <div class="col s9 recent-activity-list-text">
-				                                        <a href="junta.html?id={{junta._id}}">{{junta.JUTLUG}}</a>
-				                                        <p style="color:black">{{junta.JUTMOT}}</p>
-				                                    </div>
-				                                </div>
-				                            </div>
-				                        </li>
+					                        <li class="active">
+					                            <div class="collapsible-header teal white-text active"><i class="mdi-social-whatshot"></i>Acuerdos asignados</div>
+					                            <div class="collapsible-body recent-activity" style="display: block;">
+					                                <div ng-repeat='acuerdo in acuerdos' class="recent-activity-list chat-out-list row">
+					                                    <div class="col s9 recent-activity-list-text" style='max-height:70px;overflow:auto;width:100%;'>
+					                                        <a href="acuerdo.html?id={{acuerdo._id}}" style='text-align:center'>Acuerdo {{acuerdo.ACUNAC}} - Fecha límite {{acuerdo.ACUTIM}}</a>
+					                                        <span style="color:black;font-size:0.9rem;position:relative;top:-15px;" >{{acuerdo.ACUDES}}</span>
+					                                    </div>
+					                                </div>
+					                            </div>
+					                        </li>
 				                        </ul>
 				                    </li>
 				                <div class="ps-scrollbar-x-rail" style="left: 0px; bottom: 3px;"><div class="ps-scrollbar-x" style="left: 0px; width: 0px;"></div></div><div class="ps-scrollbar-y-rail" style="top: 0px; height: 646px; right: 3px;"><div class="ps-scrollbar-y" style="top: 0px; height: 591px;"></div></div></ul>
@@ -160,7 +196,7 @@
 	                            </div>
 	                        </li>
 	                    </ul>
-	                </li>-->
+	                </li>>
 	                <li class="no-padding">
 	                    <ul class="collapsible collapsible-accordion">
 	                        <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i class="mdi-action-receipt"></i> Acuerdos</a>
@@ -174,12 +210,28 @@
 	                            </div>
 	                        </li>
 	                    </ul>
-	                </li>
+	                </li-->
                 </ul>
                 <a href="#" data-activates="slide-out" class="sidebar-collapse btn-floating btn-medium waves-effect waves-light hide-on-large-only cyan"><i class="mdi-navigation-menu"></i></a>
             </aside>
             <section id="content" class='cyan'>
             	<div class="container">
+            		<div id="mensaje_cumple"></div>
+            		<div class="card large" style="height:100%;">
+              			<div class="card-image">
+                			<img src="../img/bg.jpg">
+                			<span class="card-title blue titulo_tarjeta">{{usuario.nombreC}}</span>
+              			</div>
+              			<div class="card-content" style="min-height:200px">
+                			<p style="color:#757575">RFC: <span style='color:#212121'>{{usuario.rfc}}</span></p>
+                			<p style="color:#757575">Correo: <span style='color:#212121'>{{usuario.email}}</span></p>
+                			<div class="divider"></div>
+                			<p style="color:#757575;" class="right">Teléfono: <span style='color:#212121'>{{usuario.celular}}</strong></p>
+              			</div>
+              			<div class="card-action">
+                			<a href="perfil.html" class="orange-text">Editar perfil</a>
+              			</div>
+            		</div>
             	</div>
             </section>
 		</body>

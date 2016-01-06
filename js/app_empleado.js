@@ -1,4 +1,5 @@
 var url_server = 'http://159.203.128.165:8080/';
+//var url_server = 'http://127.0.0.1:8080/';
 var socket = io.connect(url_server);
 
 /* Controlador para secretario */
@@ -21,7 +22,7 @@ app.directive('fileModel', ['$parse', function ($parse) {
 }]);
 
 app.service('fileUpload', ['$http', function ($http) {
-    this.uploadFileToUrl = function(nombre, file, uploadUrl){
+    this.uploadFileToUrl = function(nombre, file, tarea, uploadUrl){
         var fd = new FormData();
         fd.append('photo', file);
         fd.append('nombre', nombre)
@@ -30,8 +31,19 @@ app.service('fileUpload', ['$http', function ($http) {
             headers: {'Content-Type': undefined}
         })
         .success(function(response){
-            if(response.type)
-                $("#mensaje").html("Se ha subido el archivo")
+            if(response.type){
+                tarea.id = tarea._id; // Pasamos la _id a id para mayor comodidad del lado del servidor a manejar el dato.
+                delete tarea._id
+                tarea.ACUSTA = 'Terminada';
+                tarea.url_file = response.ruta;
+                $http.put(url_server+"tarea/actualizar", tarea).success(function(response) {
+                    $("#mensaje").empty();
+                    $("#mensaje").append('<div class="chip col s12 m12 l12">Tarea finalizada. <i class="material-icons">Cerrar</i></div>');
+                    $("#mensaje").css('color', '#FFF');
+                    location.reload();
+                })
+                //$("#mensaje").html("Se ha subido el archivo <a href='empleado.html'>Volver</a>")
+            }
             else
                 $("#mensaje").html("Ocurrio un error al subir el archivo")
         })
@@ -56,9 +68,28 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
         getTareaUnico();
     }
 	
-
+    /* Método para actualizar un usuario */
+    $scope.updateUsuario = function() {
+        var usuario = $scope.usuario;
+        $('#'+usuario._id+"-Update").closeModal();
+        usuario.id = usuario._id; // Pasamos la _id a id para mayor comodidad del lado del servidor a manejar el dato.
+        delete usuario._id; // Lo borramos para evitar posibles intentos de modificación de un ID en la base de datos
+        // Hacemos una petición PUT para hacer el update a un documento de la base de datos.
+        var nombre_puesto = $("#puesto_empleado_update-"+usuario.id+" option:selected").text();
+        usuario.puesto_nombre = nombre_puesto;
+        $http.put(url_server+"user/actualizar", usuario).success(function(response) {
+            if(response.status === "OK") {
+                getUsuarioUnico(); // Actualizamos la lista de ToDo's
+                $("#mensaje").empty();
+                $("#mensaje").append('<div class="chip">Información actualizada <i class="material-icons">Cerrar</i></div>');
+                $("#mensaje").css('color', '#FFF');
+            }
+        });
+    }
+    
 	/* Funcion de escucha ante un nuevo acuerdo */
 	socket.on("nueva_tarea", function (data) {
+        nuevaTareaAlert()
 		var user = JSON.parse(usuario)
 		var myName = user._id;
 		if (myName == data.ACUCPE) {
@@ -77,7 +108,19 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
 		    });
 		};
 	});
-
+    function alertDismissed() {
+            // do something
+        }
+    // Alerta de nueva junta
+    function nuevaTareaAlert() {
+        navigator.notification.beep(3);
+        navigator.notification.alert(
+            'Se te ha asignado una nueva tarea!',  // message
+            alertDismissed,         // callback
+            'Nueva junta',            // title
+            'Aceptar'                  // buttonName
+        );
+    }
 	/* Metodo para obtener la cantidad de acuerdos del usuario */
 	function total_tareas(){
 		var user = JSON.parse(usuario)
@@ -110,14 +153,62 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
             $("#mensaje").html("Por favor seleccione el archivo y nombre.")
         }
         var uploadUrl = url_server+"guardar";
-        fileUpload.uploadFileToUrl(filename, file, uploadUrl);
+        fileUpload.uploadFileToUrl(filename, file, $scope.tarea, uploadUrl);
     }
-
     /* Método para obtener información de una tarea específica */
     function getTareaUnico() {
+        $scope.bloqueado = "true";
         $http.get(url_server+"tarea/find/"+edit).success(function(response) {
             if(response.type) { // Si nos devuelve un OK la API...
                 $scope.tarea = response.data[0];
+                $scope.dependencias = []
+                // Comprobamos el estado de las dependencias en caso de existir
+                for (var i=0;i<$scope.tarea.dependencias.length;i++){
+                    var dep = $scope.tarea.dependencias[i]
+                    $http.get(url_server+"tarea/find/"+dep).success(function(response) {
+                        if(response.type) { // Si nos devuelve un OK la API...
+                            var tarea_dep = response.data[0];
+                            $scope.dependencias.push(tarea_dep);
+                            if ($scope.bloqueado == "true" && (tarea_dep.ACUSTA == 'No iniciada' || tarea_dep.ACUSTA == 'En progreso') ) {
+                                $scope.bloqueado = "false";
+                            };
+                        }
+                    });
+                }
+                var params = $scope.acuerdo.url_file.split('/')
+                var type = params[params.length-1].split('.')
+                if (type[type.length-1] == 'pdf') {
+                    $scope.type_file = 'pdf'
+                }else{
+                    $scope.type_file = 'img'
+                }
+                if ($scope.tarea.ACUSTA == 'Terminada') {
+                    var url = $scope.tarea.url_file.substring(2)
+                    $scope.url_final = url_server+url;
+                };
+            }
+        });
+    }
+
+    // Método para iniciar una tarea
+    $scope.iniciar = function(){
+        var tarea = $scope.tarea
+        tarea.id = tarea._id; // Pasamos la _id a id para mayor comodidad del lado del servidor a manejar el dato.
+        delete tarea._id
+        tarea.ACUSTA = 'En progreso';
+        $http.put(url_server+"tarea/actualizar", tarea).success(function(response) {
+            $("#mensaje").empty();
+            $("#mensaje").append('<div class="chip col s12 m12 l12">Información actualizada <i class="material-icons">Cerrar</i></div>');
+            $("#mensaje").css('color', '#FFF');
+            getTareaUnico(response.data._id)
+        })
+    }
+    /* Método para obtener información de un usuario específico */
+    function getUsuarioUnico() {
+        $http.get(url_server+"user/buscar/"+edit).success(function(response) {
+            if(response.type) { // Si nos devuelve un OK la API...
+                $scope.usuario = response.data[0];
+                localStorage.getItem("usuario") = JSON.stringify(response.data[0])
             }
         });
     }

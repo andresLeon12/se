@@ -1,6 +1,8 @@
 var app = angular.module('secreto', [])
 //var url_server = 'http://192.168.1.103:8080/';
 var url_server = 'http://159.203.128.165:8080/';
+//var url_server = 'http://127.0.0.1:8080/';
+
 //Para cerrar los modales
 $(document).on("click","#eliminar", function(){
 	$("#delete").openModal()// Abrimos la ventana
@@ -8,12 +10,15 @@ $(document).on("click","#eliminar", function(){
 
 app.controller('ordenController', ['$scope', '$http', function($scope, $http) {
 		//alert("asasdsadasdsadasdas");
+        var nuevaClave = 0;
         var empresa = localStorage.getItem("empresa")
         $scope.ordenN = {}
         $scope.nuevaOrden = function() {
             /*$scope.juntaN.JUTHOR = getHora();*/
             $scope.ordenN.ORDSTA = "C";
             $scope.ordenN.empresa = empresa;
+            $scope.ordenN.CLVJUT = document.getElementById('id').value;
+            $scope.ordenN.ORDNUM = nuevaClave;
             // Hacemos un POST a la API para dar de alta nuestro nuevo ToDo
             $http.post(url_server+"orden/crear", $scope.ordenN).success(function(response) {
                 if(response.status === "OK") { // Si nos devuelve un OK la API...
@@ -22,6 +27,7 @@ app.controller('ordenController', ['$scope', '$http', function($scope, $http) {
                     $("#mensaje").empty();
                     $("#mensaje").append('<div class="chip">Orden generada<i class="material-icons">Cerrar</i></div>');
                     $("#mensaje").css('color', '#FFF');
+                    getJuntaUnica();
                 }
             })
         }
@@ -57,7 +63,8 @@ app.controller('ordenController', ['$scope', '$http', function($scope, $http) {
             })
         }
 
-        $scope.deleteOrden = function(id) {
+        //$scope.deleteOrden = function(id) {
+            $scope.deleteOrden = function(id,clvJunta) {
             $('#delete').closeModal()
             //primero buscamos el puesto para verificar que no este ocupado
             $http.delete(url_server+"orden/eliminar", { params : {identificador: id}}).success(function(response) {
@@ -65,7 +72,8 @@ app.controller('ordenController', ['$scope', '$http', function($scope, $http) {
                 if(response.status === "OK") { // Si la API nos devuelve un OK...
                     //$('#'+id+"-Delete").modal('hide');
                     $("#mensaje").empty();
-                    $("#mensaje").append('<div class="chip">Junta eliminada <a href="orden_del_dia.html">Volver a lista de ordenes</a></div>');
+                    //$("#mensaje").append('<div class="chip">Junta eliminada <a href="orden_del_dia.html">Volver a lista de ordenes</a></div>');
+                    $("#mensaje").append('<div class="chip">Junta eliminada <a href="orden_del_dia.html?id='+clvJunta+'">Volver a lista de ordenes</a></div>');
                     $("#mensaje").css('color', '#FFF');
                     $(".card-reveal").fadeOut()
                     $scope.orden = {}
@@ -105,17 +113,21 @@ app.controller('ordenController', ['$scope', '$http', function($scope, $http) {
         //getJuntas();
         //getOrden()
         var nuevo = getUrlParameter('new')
-        if (nuevo == undefined)
+        if (nuevo == undefined){
+            //alert("nuevo undefinedasdsad");
             getJuntas(); // Obtenemos la lista de ToDo al cargar la página
         	getOrden();
+        }
         var edit = getUrlParameter('id');
         /* Llamamos a la función para obtener la lista de usuario al cargar la pantalla */
         if (edit == undefined) {
+            //alert("edit undefined|12213");
             getOrden();
             getJuntas();
         }else{
+            //alert("edit no undefinedasdsa");
         	getOrdenUnica();
-            //getJuntaUnica();
+            getJuntaUnica();
         }
 
         function getUrlParameter(sParam) {
@@ -132,4 +144,52 @@ app.controller('ordenController', ['$scope', '$http', function($scope, $http) {
                 }
             }
         };
+        
+        //Método para obtener información de una junta específica
+        function getJuntaUnica() {
+            //alert("getJuntaUnica");
+            $http.get(url_server+"junta/find/"+edit).success(function(response) {
+                if(response.type) { // Si nos devuelve un OK la API...
+                    $scope.junta = response.data[0];
+                    document.getElementById('id').value = response.data[0]._id;
+                    var idt = response.data[0]._id;
+                    //alert("idt "+idt);
+                    $http.get(url_server+"orden/allOrden", { params : {identificador: idt}}).success(function(response){
+
+                        var indice = response.data;
+                        //alert("entro indice "+indice.length);
+                        //nuevaClave = 0;
+                        if (indice == 0) {
+                            nuevaClave = 1;
+                        }else{
+                            nuevaClave = getNewIndice(indice);
+                        }
+                        //alert("nuevaClave "+nuevaClave);
+                        $scope.newClave = nuevaClave;
+                    });
+                }
+            });
+        }
+
+        function getNewIndice(data){
+            var contador = 1;
+            var nuevaClave = -1;
+            var booleano = true;
+            var bandera;
+            while(booleano){
+                bandera = 0;
+                for (var i = 0; i < data.length ; i++) {
+                    if(data[i].ORDNUM == contador){
+                        bandera = 1;
+                    }
+                }
+                if (bandera == 1) {
+                    contador++;
+                    booleano = true;
+                }else{
+                    booleano = false;
+                }
+            }
+            return contador;
+        }
 }]);

@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -61,8 +62,8 @@
         		<!-- end header nav-->
     		</header>
     <!-- END HEADER -->
+    <br><br><br><br>
     <div class="container">
-    	<div id="error"></div>
     	<div id="login-page" class="row">
 	    	<div class="col s12 z-depth-4 card-panel">
 	      		<form id="myForm" ng-submit="nuevoAcuerdo()">
@@ -73,12 +74,23 @@
 	          			</div>
 	        		</div>
 	        		<div class="row margin">
+	        			<p>Acuerdo: {{newClave}}</p>
+	        		</div>
+	        		<div class="row margin">
+	        			<div class="col s12">
+	        			<label for="clave">Lista de Juntas</label>
+		            		<select class="browser-default" ng-model="acuerdoN.ACUCJU">
+		            			<option ng-repeat='junta in juntas' value="{{junta._id}}">{{junta.JUTCVE}}</option>
+		            		</select>
+	          			</div>
+	        		</div>
+	        		<!--div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-content-sort prefix"></i>
 	            			<input type="text" class="form-control" ng-model="acuerdoN.ACUCJU" required>
 							<label for="clave">Clave</label>
 	          			</div>
-	        		</div>
+	        		</div-->
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-content-sort prefix"></i>
@@ -86,13 +98,13 @@
 							<label for="clave">Consecutivo</label>
 	          			</div>
 	        		</div>
-	        		<div class="row margin">
+	        		<!--div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-content-sort prefix"></i>
 	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUNAC" required>
 							<label for="clave">Número de acuerdo</label>
 	          			</div>
-	        		</div>
+	        		</div-->
 	        		<div class="form-group">
 				                	<label class="col-sm-1 control-label">Directivo a cargo</label>
 				                	<div class="col-sm-12">
@@ -107,38 +119,63 @@
 							        	<textarea class="form-control" id="ACUDES" class="validate" ng-model="acuerdoN.ACUDES" required></textarea>
 							        </div>
 						        </div>
-					<div class="row margin">
+					<!--div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-content-sort prefix"></i>
 	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUTIM" required>
 							<label for="clave">Días</label>
 	          			</div>
+	        		</div-->
+	        		<div class="row margin">
+	          			<div class="input-field col s12">
+	            			<i class="mdi-action-today prefix"></i>
+	            			<input type="text" class="datepicker" ng-model="acuerdoN.ACUTIM" required>
+							<label for="clave">Fecha Limite</label>
+	          			</div>
 	        		</div>
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
+	            			<i class="mdi-action-receipt prefix"></i>
 	            			<input type="text" class="form-control" ng-model="acuerdoN.ACUENT" required>
 							<label for="clave">Entregable</label>
 	          			</div>
 	        		</div>
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
-	            			<i class="mdi-content-sort prefix"></i>
+	            			<i class="mdi-editor-attach-money prefix"></i>
 	            			<input type="number" class="form-control" ng-model="acuerdoN.ACUPRE" step='0.01' required>
 							<label for="clave">Presupuesto</label>
 	          			</div>
 	        		</div>
 	        		<div class="row">
-	          			<div class="input-field col s12">
+	          			<div ng-if="juntas.length == 0" class="input-field col s12">
+	          				<p class="margin center medium-small sign-up"> 
+	          					No hay juntas para poder dar de alta un acuerdo
+	          					<a href="nueva_junta.html?new=1"> Dar de alta una Junta</a>
+	          				</p>
+	          			</div>
+	          			<div ng-if="juntas.length > 0" class="input-field col s12">
 	          				<input type="submit" class="btn waves-effect waves-light col s12" value="Registrar">
 	          			</div>
 	          			<div class="input-field col s12">
 	            			<p class="margin center medium-small sign-up"> <a href="secretario.html">Cancelar</a></p>
 	          			</div>
+	          			<div id="error"></div>
+	          			<a href="acuerdos.html" class="wavs-effects wavs-green btn-flat"><i class="mdi-action-visibility"></i> Ver todos los Acuerdos</a>
 	        		</div>
 	      		</form>
 	    	</div>
 	  	</div>
     </div>
 </body>
+<script>
+$('.datepicker').pickadate({
+        selectMonths: true, // Creates a dropdown to control month
+        selectYears: 15, // Creates a dropdown of 15 years to control year
+        min:new Date(),
+        firstDay: 1,
+        format: 'dd/mm/yyyy',
+        formatSubmit: 'dd/mm/yyyy'
+    });
+</script>
 </html>		

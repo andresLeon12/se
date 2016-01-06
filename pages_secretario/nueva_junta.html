@@ -16,6 +16,7 @@
 			<script type='text/javascript'src='../js/picker.time.js'></script>
   			<script type="text/javascript" src="../js/app_junta.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -64,12 +65,12 @@
         		<!-- end header nav-->
     		</header>
     <!-- END HEADER -->
+    <br><br><br><br>
     <div class="container">
-    	<div id="mensaje"></div>
+
     	<div id="login-page" class="row">
 	    	<div class="col s12 z-depth-4 card-panel">
-	    		<div id="mensaje"></div>
-	      		<form ng-submit="nuevaJunta()">
+	    		<form ng-submit="nuevaJunta()">
 	        		<div class="row">
 	          			<div class="input-field col s12 center">
 	            			<h4>Registrar</h4>
@@ -79,10 +80,17 @@
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-content-sort prefix"></i>
-	            			<input type="text" class="form-control" ng-model="juntaN.JUTCVE" required>
-							<label for="clave">Clave</label>
+	            			<input type="text" class="form-control" ng-model="juntaN.JUTCVE" maxlength="8" required>
+							<label for="clave">Clave (8 caracteres)</label>
 	          			</div>
 	        		</div>
+	        		<div class="form-group">
+						<div class="input-field col s12 m12 l12">
+							<i class="mdi-editor-mode-edit prefix"></i>
+							<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="juntaN.JUTMOT" required></textarea>
+							<label for="ACUDES">Motivo de la Junta</label>
+						</div>
+					</div>
 	        		<div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-editor-insert-invitation prefix"></i>
@@ -104,13 +112,6 @@
 							<label for="lugar">Lugar</label>
 	          			</div>
 	        		</div>
-	        		<div class="form-group">
-						<div class="input-field col s12 m12 l12">
-							<i class="mdi-editor-mode-edit prefix"></i>
-							<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="juntaN.JUTMOT" required></textarea>
-							<label for="ACUDES">Descripción</label>
-						</div>
-					</div>
 	        		<div class="row">
 	          			<div class="input-field col s12">
 	          				<input type="submit" class="btn waves-effect waves-light col s12" value="Registrar">
@@ -119,11 +120,15 @@
 	            			<p class="margin center medium-small sign-up"> <a href="../index.html">Cancelar</a></p>
 	          			</div>
 	        		</div>
+	        		<div id="mensaje"></div>
+	        		<div class="row">
+	        			<a href="juntas_de_trabajo.html" class="wavs-effects wavs-green btn-flat"><i class="mdi-action-visibility"></i> Ver todas las Juntas</a>
+	        		</div>
 	      		</form>
 	    	</div>
 	  	</div>
     </div>
-    
+    <br><br>
 </body>
 <script>
 $.datetimepicker.setLocale('es');
@@ -132,5 +137,13 @@ $('#hora').datetimepicker({
 	format:'H:i',
 	step:60
 });
+$('.datepicker').pickadate({
+				        selectMonths: true, // Creates a dropdown to control month
+				        selectYears: 15, // Creates a dropdown of 15 years to control year
+				        //min:new Date(),
+				        firstDay: 1,
+				        format: 'dd/mm/yyyy',
+				        formatSubmit: 'dd/mm/yyyy'
+				    });
 </script>
 </html>		

@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_empleado.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -50,28 +51,68 @@
 	      			<div class="row" style="height: 40%;"></div>
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{tarea.ACUDES}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <span class="card-title activator grey-text text-darken-4">Tarea Asignada: {{tarea.ACUDES}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <p style="color: grey">
+						<b>Presupuesto: ${{tarea.ACUPRE}}</b><br>
+						Tarea con una duración de {{tarea.ACUTIM}} días para realizar. <br>Tendras que subir como entregable un {{tarea.ACUENT}} <br>
+						<b>Estado de la tarea: {{tarea.ACUSTA}}</b> <br>
+						<p ng-if='tarea.ACUSTA=="No iniciada"'>
+							<a href="#" class="btn-flat" ng-click='iniciar()'>
+								<i class='mdi-av-play-circle-outline'></i>&nbsp;Iniciar tarea.
+							</a>
+						</p>
+						<div ng-if='tarea.dependencias.length > 0'>
+							<h5>Dependencias</h5>
+						    <table>
+								<thead>
+							    	<td>Depende de</td>
+							    	<td>Estado</td>
+							    </thead>
+							    <tr ng-repeat='d in dependencias'>
+							    	<td >{{d.ACUDES}}</td>
+							    	<td >{{d.ACUSTA}}</td>
+							    </tr>
+							</table>
+						</div>
+					</p>
 	    		</div>
 	    		<div class="card-reveal">
+	    			<div ng-if='bloqueado=="false"'>
+	    				<span class="card-title grey-text text-darken-4">No puedes subir tu entregable hasta que las tareas de las cuales depende ésta tarea sean terminadas.<i class='mdi-navigation-close right'></i></span>
+	    			</div>
+	    			<div ng-if='tarea.ACUSTA=="No iniciada"'>
+	    				<span class="card-title grey-text text-darken-4">No puedes subir tu entregable hasta que no inicias la tarea.<i class='mdi-navigation-close right'></i></span>
+	    			</div>
+	    			<div ng-if='tarea.ACUSTA=="Terminada"'>
+	    				<span class="card-title grey-text text-darken-4">La tarea ya esta terminada.<i class='mdi-navigation-close right'></i></span>
+	    				<br>
+	    				<h5>Entregable</h5>
+	    				<img ng-if='type_file=="img"' src="{{url_final}}" class="responsive-img">
+	    				<a ng-if='type_file=="pdf"' target="black" href="{{url_final}}">Ver documento</a>
+	    			</div>
+	    			<div ng-if='bloqueado=="true" && tarea.ACUSTA!="No iniciada" && tarea.ACUSTA!="Terminada"'>
 	      			<span class="card-title grey-text text-darken-4">Subir entregable<i class='mdi-navigation-close right'></i></span>
-	      			<form class="form-horizontal" role="form"  enctype='multipart/form-data'>					    {{myFile}}
+	      			<form class="form-horizontal" role="form"  enctype='multipart/form-data'>
 	      				<div class="form-group">
 							<label for="ACUCJU">Nombre</label>
 							<div class="col s12 m12 l12">
 								<input class="form-control" id="ACUCJU" ng-model='filename' name="nombre" type="text" class="validate" required>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="ACUCON">Archivo entregable</label>
-							<div class="col s12 m12 l12">
-							<input type="file" file-model="myFile" name='photo'/>
-								<!--<input class="form-control" id="ACUCON" ng-model='file' type="file" name='photo' class="validate" required>-->
-							</div>
-						</div>
+						<div class="file-field input-field">
+				      		<div class="btn">
+				        		<span>Archivo</span>
+				        		<input type="file" file-model="myFile" name='photo'>
+				      		</div>
+				      		<div class="file-path-wrapper">
+				       		    <input class="file-path validate" type="text">
+				      		</div>
+				    	</div>
 					    <div class="form-group">
 							<button type="button" ng-click='entregable(filename, myFile)' class="btn btn waves-effect waves-red right">Aceptar</button>
 						</div>  
 				    </form>  
+				    </div>
 	    		</div>
 	  		</div>
   		</div>

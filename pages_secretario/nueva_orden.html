@@ -14,8 +14,9 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<!--<script type='text/javascript'src='../js/picker.js'></script>-->
 			<script type='text/javascript'src='../js/picker.time.js'></script>
-  			<script type="text/javascript" src="../js/app_orden.js"></script>
+			<script type="text/javascript" src="../js/app_orden.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -55,7 +56,8 @@
             		<nav class="navbar-color">
                 		<div class="nav-wrapper">
                     		<ul class="left">                      
-                    			<li><a href="secretario.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li>
+                    			<!--li><a href="secretario.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li-->
+                    			<li><a href="juntas_de_trabajo.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li>
                       			<li><h1 class="logo-wrapper"><a href="secretario.html" class="brand-logo darken-1"><img src="../img/logo.png" alt=""></a> <span class="logo-text">SECRETO</span></h1></li>
                     		</ul>
 	                	</div>
@@ -64,6 +66,7 @@
         		<!-- end header nav-->
     		</header>
     <!-- END HEADER -->
+    <br><br>
     <div class="container">
     	<div id="login-page" class="row">
 	    	<div class="col s12 z-depth-4 card-panel">
@@ -72,25 +75,27 @@
 	        		<div class="row">
 	          			<div class="input-field col s12 center">
 	            			<h4>Registrar</h4>
-	            			<p class="center">Agregar nueva Orden del Día</p>
+	            			<p class="center">Agregar nueva Orden del Día para Junta {{junta.JUTCVE}}</p>
+	            			<p>Nueva clave: {{newClave}}</p>
 	          			</div>
 	        		</div>
-	        		<div class="row margin">
-	        			<div class="input-field col s12">
-	            			<i class="mdi-content-sort"></i>
+	        		<!--div class="row margin">
+	        			<div class="input-field col s12"-->
+	            			<!--i class="mdi-content-sort"></i>
 		            		<label for="clave">Lista de Juntas</label>
 		            		<select class="browser-default" ng-model='ordenN.CLVJUT'>
 		            			<option ng-repeat='junta in juntas' value="{{junta._id}}">{{junta.JUTCVE}}</option>
-		            		</select>
-	          			</div>
-	        		</div>
-	        		<div class="row margin">
+		            		</select-->
+		            		<input type="hidden" id="id" ng-model="ordenN.CLVJUT">
+	          			<!--/div>
+	        		</div-->
+	        		<!--div class="row margin">
 	          			<div class="input-field col s12">
 	            			<i class="mdi-editor-insert-invitation prefix"></i>
 	            			<input type="number" min="1" max="99" class="" ng-model="ordenN.ORDNUM" required>
 							<label for="nombre">Numero de Orden</label>
 	          			</div>
-	        		</div>
+	        		</div-->
 	        		<div class="form-group">
 						<div class="input-field col s12 m12 l12">
 							<i class="mdi-editor-mode-edit prefix"></i>
@@ -105,7 +110,8 @@
 	          			<div class="input-field col s12">
 	            			<p class="margin center medium-small sign-up"> <a href="../index.html">Cancelar</a></p>
 	          			</div>
-	          			<div class="input-field col s12"><div class="chip"><a href="orden_del_dia.html">Ver Todas las Ordenes del dia</a></div></div>
+	          			<!--div class="input-field col s12"><div class="chip"><a href="orden_del_dia.html?id={{junta._id}}">Ver Todas las Ordenes del dia</a></div></div-->
+	          			<a href="orden_del_dia.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class="mdi-action-visibility"></i> Ver Orden de la junta</a>
 	        		</div>
 	      		</form>
 	    	</div>

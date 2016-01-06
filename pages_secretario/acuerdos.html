@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_secretario.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -51,17 +52,29 @@
         <div class="wrapper">
             <section id="content">
             	<div class="container">
-            		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Puestos</blockquote>
+            		<a href="nuevo_acuerdo.html" class="wavs-effects wavs-green btn-flat right"><i class="mdi-action-visibility"></i> Agregar nuevo Acuerdo</a>
+            		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Acuerdos</blockquote>
+            		<form class="col s12">
+				        <div class="input-field">
+				            <i class="mdi-action-search prefix"></i>
+				            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+				        	<label for="icon_prefix" class="">Buscar</label>
+				        </div>
+					</form>
             		<div id="mensaje"></div>
-            		<ul class="collection" ng-repeat='acuerdo in acuerdos' style="margin-bottom:0;margin-top:0;">
+            		<ul class="collection" ng-repeat='acuerdo in acuerdos|filter:busqueda' style="margin-bottom:0;margin-top:0;">
             			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
             				<a href="acuerdo.html?id={{acuerdo._id}}">
 								<i class='mdi-action-description circle green'></i>
 								<span class='title'>
-									{{acuerdo.ACUCJU}}
+									Consecutivo: {{acuerdo.ACUCON}}<br>
+									Num. Acuerdo: {{acuerdo.ACUNAC}}
 								</span>
 								<p style="color: grey">
-									{{acuerdo.ACUDES}}
+									Acuerdo: {{acuerdo.ACUDES}}<br>
+								</p>
+								<p ng-repeat="j in juntas" ng-if="j._id == acuerdo.ACUCJU">
+									Acuerdo que pertenece a la Junta: {{j.JUTCVE}}
 								</p>
 							</a>
 						</li>

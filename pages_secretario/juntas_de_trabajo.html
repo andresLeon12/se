@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_junta.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -51,20 +52,34 @@
         <div class="wrapper">
             <section id="content">
             	<div class="container">
+            		<a href="nueva_junta.html?new=1" class="wavs-effects wavs-green btn-flat right"><i class="mdi-action-settings"></i> Dar de alta Juntas</a>
             		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Juntas</blockquote>
-            		<div id="error"></div>
-            		<ul class="collection" ng-repeat='junta in juntas' style="margin-bottom:0;margin-top:0;">
+            		<form class="col s12">
+				        <div class="input-field">
+				            <i class="mdi-action-search prefix"></i>
+				            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+				        	<label for="icon_prefix" class="">Buscar</label>
+				        </div>
+					</form>
+					<div id="error"></div>
+            		<ul class="collection" ng-repeat='junta in juntas|filter:busqueda' style="margin-bottom:0;margin-top:0;">
             			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
             				<a href="junta.html?id={{junta._id}}">
 								<i class='mdi-action-group-work circle green'></i>
 								<span class='title'>
-									{{junta.JUTCVE}}
+									Clave de la Junta: {{junta.JUTCVE}}
 								</span>
 								<p style="color: grey">
-									{{junta.JUTMOT}}
+									<b>Motivo de la Junta: {{junta.JUTMOT}}</b><br>
+									Fecha de la Junta: {{junta.JUTFEC}}<br>
+									{{junta.JUTHOR}} hrs.<br>
 								</p>
 							</a>
+							<a href="junta.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class='mdi-communication-contacts'></i>&nbsp; Agregar Invitados</a>
+							<a ng-if="junta.JUTINV.length > 0" href="nueva_orden.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class='mdi-action-query-builder'></i>&nbsp; Dar de alta Orden del dia</a>
+							<a ng-if="junta.JUTINV.length > 0" href="enviarInvitaciones.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat">Enviar Invitaciones&nbsp; <i class='mdi-content-send'></i></a>
 						</li>
+						<!--a href="nueva_junta.html?id={{junta._id}}">Nueva Junta</a-->
             		</ul>
             	</div>
             </section>

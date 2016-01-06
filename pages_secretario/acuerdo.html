@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_secretario.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -43,36 +44,69 @@
     		</header>
     <!-- END HEADER -->
     <div class="container">
-    	<div id="mensaje" style="margin-left:35%;margin-top:5%;"></div>
+    	<div id="mensaje" style="margin-left:35%;margin-top:5%;">Mensaje</div>
     	<div ng-if='acuerdo._id'>
 			<div class="card large">
 	    		<div class="card-image waves-effect waves-block waves-light red">
 	      			<div class="row" style="height: 40%;"></div>
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{acuerdo.ACUDES}}<i class="mdi-editor-mode-edit right"></i></span>
-				    <p><a href="#" ng-click="deleteAcuerdo(acuerdo._id)"><i class="mdi-action-delete"></i> Eliminar</a></p>
+	    			<span class="card-title activator grey-text text-darken-4">Numero del Acuerdo: {{acuerdo.ACUNAC}}</span><br>
+	    			<span class="card-title activator grey-text text-darken-4">Orden: {{acuerdo.ACUCON}}</span><br>
+				    <span class="card-title activator grey-text text-darken-4">Descripción del Acuerdo: {{acuerdo.ACUDES}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <!--p><a href="#" ng-click="deleteAcuerdo(acuerdo._id)"><i class="mdi-action-delete"></i> Eliminar</a></p-->
 	    		</div>
+
+	    		<p><a href="#" id="eliminar"><i class="mdi-action-delete"></i> Eliminar</a></p>
+
+				<div id="delete" class="modal bottom-sheet">
+					<div class="modal-content">
+						<div class="row">
+							<div class="col s12">
+								<h5 class="grey-text">Eliminar Acuerdo {{acuerdo.ACUCON}}</h5>
+							</div>
+						</div>
+						<p>&iquest;Realmente desea eliminar el Acuerdo <b>{{acuerdo.ACUCON}}</b>?</p>
+					</div>
+					<div class="modal-footer">
+						<a class="mdi-navigation-close modal-action modal-close wavs-effects wavs-green btn-flat">No, Cancelar</a>
+						<a href="#" class="wavs-effects wavs-green btn-flat" ng-click="deleteAcuerdo(acuerdo._id)"><i class="mdi-action-delete"></i>Si, lo deseo Eliminar</a>
+					</div>
+				</div>
+				<br>
+
 	    		<div class="card-reveal">
 	      			<span class="card-title grey-text text-darken-4">Actualizar información<i class='mdi-navigation-close right'></i></span>
 	      			<form class="form-horizontal" role="form" ng-submit="updateAcuerdo()">					    <div class="form-group">
-							<label for="ACUCJU">Clave del acuerdo</label>
-							<div class="col s12 m12 l12">
-								<input class="form-control" id="ACUCJU" type="text" class="validate" ng-model="acuerdo.ACUCJU" required>
-							</div>
-						</div>
+	      				<p>Acuerdo: {{acuerdo.ACUNAC}}</p>
+
+	      				<div class="row margin">
+	        				<div class="input-field col s12">
+	            				<i class="mdi-content-sort"></i>
+		            			<select class="browser-default" ng-model="acuerdo.ACUCJU">
+		            				<option ng-repeat='junta in juntas' value="{{junta._id}}">{{junta.JUTCVE}}</option>
+		            			</select>
+		            			<label for="clave">Lista de Juntas</label>
+	          				</div>
+	        			</div>
+
+						<!--label for="ACUCJU">Clave del acuerdo</label>
+						<div class="col s12 m12 l12">
+							<input class="form-control" id="ACUCJU" type="text" class="validate" ng-model="acuerdo.ACUCJU" required>
+						</div-->
+						<!--/div-->
 						<div class="form-group">
 							<label for="ACUCON">Consecutivo</label>
 							<div class="col s12 m12 l12">
 								<input class="form-control" id="ACUCON" type="number" maxlength="2" class="validate" ng-model="acuerdo.ACUCON" required>
 							</div>
 						</div>
-						<div class="form-group">
+						<!--div class="form-group">
 							<label for="ACUNAC">Número de acuerdo</label>
 							<div class="col s12 m12 l12">
 								<input class="form-control" id="ACUNAC" type="number" maxlength="2" class="validate" ng-model="acuerdo.ACUNAC" required>
 							</div>
-						</div>
+						</div-->
 					    <div class="form-group">
 					    	<label class="col-sm-1 control-label">Directivo a cargo</label>
 					        <div class="col-sm-12">
@@ -90,9 +124,15 @@
 						<div class="form-group">
 							<label for="ACUTIM">Días</label>
 							<div class="col s12 m12 l12">
-								<input class="form-control" id="ACUTIM" type="number" maxlength="2" class="validate" ng-model="acuerdo.ACUTIM" required>
+								<input type="text" class="datepicker" ng-model="acuerdo.ACUTIM" required>
 							</div>
 						</div>
+						<!--div class="form-group">
+							<label for="ACUTIM">Días</label>
+							<div class="col s12 m12 l12">
+								<input class="form-control" id="ACUTIM" type="number" maxlength="2" class="validate" ng-model="acuerdo.ACUTIM" required>
+							</div>
+						</div-->
 						<div class="form-group">
 							<label for="ACUENT">Entregable</label>
 							<div class="col s12 m12 l12">
@@ -110,6 +150,16 @@
 						</div>  
 				    </form>  
 	    		</div>
+	    		<script>
+					$('.datepicker').pickadate({
+				        selectMonths: true, // Creates a dropdown to control month
+				        selectYears: 15, // Creates a dropdown of 15 years to control year
+				        //min:new Date(),
+				        firstDay: 1,
+				        format: 'dd/mm/yy',
+				        formatSubmit: 'dd/mm/yy'
+				    });
+				</script>
 	  		</div>
   		</div>
     </div>

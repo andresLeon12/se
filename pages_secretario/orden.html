@@ -16,6 +16,7 @@
 			<script type='text/javascript'src='../js/picker.time.js'></script>
   			<script type="text/javascript" src="../js/app_orden.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -36,7 +37,8 @@
             		<nav class="navbar-color">
                 		<div class="nav-wrapper">
                     		<ul class="left">                      
-                    			<li><a href="orden_del_dia.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li>
+                    			<li><a href="orden_del_dia.html?id={{orden.CLVJUT}}" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li>
+                    			<!--li><a href="orden_del_dia.html" style="font-size: 1.5rem;margin-left:10px;"><i class='mdi-navigation-arrow-back'></i></a></li-->
                       			<li><h1 class="logo-wrapper"><a href="secretario.html" class="brand-logo darken-1"><img src="../img/logo.png" alt=""></a> <span class="logo-text">SECRETO</span></h1></li>
                     		</ul>
 	                	</div>
@@ -53,7 +55,7 @@
 	      			<div class="row" style="height: 40%;"></div>
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{orden.ORDMOT}}<i class="mdi-editor-mode-edit right"></i></span>
+	    			<span class="card-title activator grey-text text-darken-4">{{orden.ORDMOT}}<i class="mdi-editor-mode-edit right"></i></span>
 				    <!--p><a href="#" ng-click="deleteOrden(orden._id)"><i class="mdi-action-delete"></i> Eliminar</a></p-->
 				    <p><a href="#" id="eliminar"><i class="mdi-action-delete"></i> Eliminar</a></p>
 				    <!--button onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button-->
@@ -84,7 +86,8 @@
 					</div>
 					<div class="modal-footer">
 						<a class="modal-action modal-close wavs-effects wavs-green btn-flat">Cancelar</a>
-						<a href="#" class="wavs-effects wavs-green btn-flat" ng-click="deleteOrden(orden._id)"><i class="mdi-action-delete"></i> Eliminar</a>
+						<!--a href="#" class="wavs-effects wavs-green btn-flat" ng-click="deleteOrden(orden._id)"><i class="mdi-action-delete"></i> Eliminar</a-->
+						<a href="#" class="wavs-effects wavs-green btn-flat" ng-click="deleteOrden(orden._id,orden.CLVJUT)"><i class="mdi-action-delete"></i> Eliminar</a>
 					</div>
 				</div>
 

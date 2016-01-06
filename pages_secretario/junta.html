@@ -16,6 +16,7 @@
 			<script type='text/javascript'src='../js/picker.time.js'></script>
   			<script type="text/javascript" src="../js/app_junta.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -48,15 +49,84 @@
     <div class="container">
     	<div id="mensaje" style="margin-left:35%;margin-top:5%;"></div>
     	<div ng-if='junta._id'>
-			<div class="card large">
-	    		<div class="card-image waves-effect waves-block waves-light red">
+			<div class="card large" style="scroll:overflow;">
+	    		<div style="padding-left:10px;" class="card-image waves-effect waves-block waves-light yellow">
 	      			<div class="row" style="height: 40%;"></div>
+	      			<i class='mdi-alert-warning'></i>
+	      			Puede volver a seleccionar los invitados a la reunion las veces que necesite, solo que perdera los registros anteriores con eso.
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{junta.JUTMOT}}<i class="mdi-editor-mode-edit right"></i></span>
-				    <p><a href="#" ng-click="deleteJunta(junta._id)"><i class="mdi-action-delete"></i> Eliminar</a></p>
-				    <div ng-if='junta.JUTINV.length == 0'>
-					    <button id="boton_invitados" onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button>
+				    <span class="card-title activator grey-text text-darken-1" style="font-size:11pt;">Clave de la Junta: {{junta.JUTCVE}}</span><br>
+				    <p>{{junta.JUTMOT}}</p>
+				    <!--span class="card-title activator grey-text text-darken-4" style="font-size:10pt;">Motivo: {{junta.JUTMOT}}</span-->
+				    <span class="card-title activator grey-text text-darken-1" style="font-size:11pt;">Junta pactada el {{junta.JUTFEC}} a las {{junta.JUTHOR}} hrs.<i class="mdi-editor-mode-edit right"></i></span>
+
+				    <p><a href="#" id="eliminar"><i class="mdi-action-delete"></i> Eliminar</a></p>
+
+				    <div id="delete" class="modal bottom-sheet">
+						<div class="modal-content">
+							<div class="row">
+								<div class="col s12">
+									<h5 class="grey-text">Eliminar Junta {{junta.JUTCVE}}</h5>
+								</div>
+							</div>
+							<p>&iquest;Realmente desea eliminar la Junta <b>{{junta.JUTCVE}}</b>?</p>
+						</div>
+						<div class="modal-footer">
+							<a class="mdi-navigation-close modal-action modal-close wavs-effects wavs-green btn-flat">No, Cancelar</a>
+							<a href="#" class="wavs-effects wavs-green btn-flat" ng-click="deleteJunta(junta._id)"><i class="mdi-action-delete"></i>Si, lo deseo Eliminar</a>
+						</div>
+					</div>
+					<br>
+				    <!--div ng-if='junta.JUTINV.length == 0'-->
+				    	<!--button id="boton_invitados" onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button-->
+				    	<p>
+				    		<a href="#" class="btn" id="invitar">
+				    			Añadir invitados a reunión	
+				    		</a>
+				    	</p>
+
+				    	<div id="inv" class="modal">
+							<div class="modal-content">
+								<div class="row">
+									<div class="col s12">
+										<h6 style="text-align:center;" class="grey-text">Añadir Invitados a la Junta {{junta.JUTCVE}}</h6>
+									</div>
+								</div>
+								<form class="col s12">
+							        <div class="input-field">
+							            <i class="mdi-action-search prefix"></i>
+							            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+							        	<label for="icon_prefix" class="">Buscar</label>
+							        </div>
+								</form>
+					          	<span ng-repeat="c in directivos|filter:busqueda">
+									<input type='checkbox' ng-click='addEmpleado(c._id,c.puesto,c.nombreC)' id="{{c.nombreC}}" value="{{c.nombreC}}" check-list='checkedEmpleados'>
+									<label style="color:black;" for="{{c.nombreC}}">
+										<p ng-repeat="p in puest" ng-if="p._id == c.puesto">
+											Puesto: {{p.nombreP}}<br>
+											<b class="grey-text">Nombre: {{c.nombreC}}</b>
+										</p>
+									</label>
+									<br><br>
+								</span>
+									<!--div>Empleados: {{checkedEmpleados | json}}</div>
+									<div>ID Empleados: {{checkedIdEmp | json}}</div>
+									<div>ID Puestos: {{checkedPuesto | json}}</div>
+								
+									<div class="col s12">
+					            		<button id="enviarInvitaciones" ng-click='invitar(junta)' type="button" class="btn" disabled>Enviar invitación</button>
+					          		</div-->
+							</div>
+							<div class="modal-footer">
+								
+								<a class="modal-action modal-close wavs-effects wavs-green btn-flat" disabled>Cancelar</a>
+								<button disabled id="enviarInvitaciones" class="wavs-effects wavs-green btn-flat" ng-click="invitar(junta)">Añadir</button>
+							</div>
+						</div>
+
+					    <!--button id="boton_invitados" onclick="$('#invitados').show()" type="button" style="position:absolute;bottom: 45px; right: 24px;" class="btn">Añadir invitados a reunión</button>
+					    
 					    <div class="row"></div>
 					    <div class="row margin" id="invitados" style="display:none">
 			          		<div class="col s12">
@@ -68,13 +138,31 @@
 			          		<div class="col s12">
 			            		<button ng-click='invitar(invitados, junta)' type="button" class="btn">Enviar invitación</button>
 			          		</div>
-			        	</div>
-		        	</div>
-		        	<div ng-if='junta.JUTINV.length > 0'>
-		        		<h5>Invitados a la junta</h5>
-		        		<ul class="collection">
-		        			<li ng-repeat='inv in junta.JUTINV'>{{inv.nombre}}-{{inv.id}}</li>
-		        		</ul>
+			        	</div-->
+
+
+
+		        	<!--/div-->
+		        	<br>
+		        	<div ng-if='junta.JUTINV.length > 0' style="width:auto;height:200px;overflow-y:scroll;">
+		        		
+		        		<h5>Invitados a la Junta {{junta.JUTCVE}}</h5>
+		        		<table>
+			        		<thead>
+			        			<td>Nombre</td>
+			        			<td>Puesto</td>
+			        		</thead>
+			        		<tr ng-repeat='inv in junta.JUTINV'>
+			        			<td>{{inv.nombre}}</td>
+			        			<td ng-repeat="p in puest" ng-if="inv.miPuesto == p._id">{{p.nombreP}}</td>
+			        		</tr>
+			        	</table>
+		        		<!--p ng-repeat='inv in junta.JUTINV'>
+		        			<b>- {{inv.nombre}} - {{inv.id}} - {{inv.miPuesto}}</b><br>
+		        		</p-->
+		        		<!--ul class="collection" ng-repeat='inv in junta.JUTINV'>
+		        			<li>{{inv.nombre}} - {{inv.id}} - {{inv.miPuesto}}</li>
+		        		</ul-->
 		        	</div>
 	    		</div>
 	    		<div class="card-reveal">
@@ -84,9 +172,15 @@
 		          			<div class="col s12">
 		            			<i class="mdi-content-sort"></i>
 		            			<label for="clave">Clave</label>
-		            			<input type="text" class="form-control" ng-model="junta.JUTCVE" required>
+		            			<input type="text" class="form-control" ng-model="junta.JUTCVE" maxlength="8" required>
 		          			</div>
 		        		</div>
+		        		<div class="form-group">
+							<div class="col s12 m12 l12">
+								<label for="ACUDES">Motivo de la Junta</label>
+								<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="junta.JUTMOT" required></textarea>
+							</div>
+						</div>
 		        		<div class="row margin">
 		          			<div class="col s12">
 		            			<i class="mdi-editor-insert-invitation"></i>
@@ -108,26 +202,28 @@
 		            			<input type="text" class="form-control" ng-model="junta.JUTLUG" required>
 		          			</div>
 		        		</div>
-		        		<div class="form-group">
-							<div class="col s12 m12 l12">
-								<label for="ACUDES">Descripción</label>
-								<textarea class="materialize-textarea" id="ACUDES" class="validate" ng-model="junta.JUTMOT" required></textarea>
-							</div>
-						</div>
 					    <div class="form-group">
 							<button type="submit" class="btn btn waves-effect waves-red right">Actualizar información</button>
 						</div>  
 				    </form>  
 	    		</div>
+	    		<script>
+					$.datetimepicker.setLocale('es');
+					$('#hora1').datetimepicker({
+						datepicker:false,
+						format:'H:i',
+						step:60
+					});
+					$('.datepicker').pickadate({
+				        selectMonths: true, // Creates a dropdown to control month
+				        selectYears: 15, // Creates a dropdown of 15 years to control year
+				        //min:new Date(),
+				        firstDay: 1,
+				        format: 'dd/mm/yyyy',
+				        formatSubmit: 'dd/mm/yyyy'
+				    });
+				</script>
 	  		</div>
   		</div>
     </div>
-    <script>
-	$.datetimepicker.setLocale('es');
-	$('#hora1').datetimepicker({
-		datepicker:false,
-		format:'H:i',
-		step:60
-	});
-	</script>
 </html>		

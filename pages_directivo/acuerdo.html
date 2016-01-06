@@ -14,6 +14,7 @@
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_directivo.js"></script>
 			<script type="text/javascript" src="../cordova.js"></script>
+			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>
 			<link rel='stylesheet' href='../css/materialize.min.css'/>
@@ -50,11 +51,45 @@
 	      			<div class="row" style="height: 40%;"></div>
 	    		</div>
 	    		<div class="card-content">
-				    <span class="card-title activator grey-text text-darken-4">{{acuerdo.ACUDES}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <span class="card-title activator grey-text text-darken-4">Acuerdo: {{acuerdo.ACUNAC}}<i class="mdi-editor-mode-edit right"></i></span>
+				    <p style="color: grey">
+						<b>Descripción: {{acuerdo.ACUDES}}</b><br>
+						La fecha límite para cumplir con el acuerdo es el {{acuerdo.ACUTIM}} <br>
+						<b>{{dias_para_junta}}</b>
+						<br>
+						<b>Estado {{acuerdo.ACUSTA}}</b>
+						<br>
+						<div ng-if='bloqueado=="true" && acuerdo.ACUSTA!="Terminada"'>
+							<a href="#" class="btn right" id="entregablebtn">
+								<i class='mdi-file-cloud-upload'></i> Subir entregable
+							</a>
+						</div>
+						<div ng-if='tareas.length > 0'>
+							<h5>Tareas</h5>
+						    <table>
+								<thead>
+							    	<td>Tarea</td>
+							    	<td>Estado</td>
+							    </thead>
+							    <tr ng-repeat='d in tareas'>
+							    	<td >{{d.ACUDES}}</td>
+							    	<td >{{d.ACUSTA}}</td>
+							    </tr>
+							</table>
+						</div>
+					</p>
 	    		</div>
 	    		<div class="card-reveal">
+	    			<div ng-if='acuerdo.ACUSTA=="Terminada"'>
+	    				<span class="card-title grey-text text-darken-4">El acuerdo ya esta terminado.<i class='mdi-navigation-close right'></i></span>
+	    				<br>
+	    				<h5>Entregable</h5>
+	    				<img ng-if='type_file=="img"' src="{{url_final}}" class="responsive-img">
+	    				<a ng-if='type_file=="pdf"' target="black" href="{{url_final}}">Ver documento</a>
+	    			</div>
+	    			<div ng-if='acuerdo.ACUSTA!="Terminada"'>
 	      			<span class="card-title grey-text text-darken-4">Asignar tareas<i class='mdi-navigation-close right'></i></span>
-	      			<form class="form-horizontal" role="form" ng-submit="nuevaTarea()">					    
+	      			<form class="form-horizontal" role="form" ng-submit="nuevaTarea(acuerdo._id)">					    
 	      				<div class="form-group">
 								    	<label for="ACUCJU">Clave de la tarea</label>
 								        <div class="col s12 m12 l12">
@@ -88,18 +123,102 @@
 								        </div>
 							        </div>
 							        <div class="form-group">
-								    	<label for="ACUPRE">Presupuesto</label>
-								        <div class="col s12 m12 l12">
-								    	    <input class="form-control" id="ACUPRE" type="number" step='0.1' maxlength="2" class="validate" ng-model="tarea.ACUPRE" required>
-								        </div>
+								        <div class="input-field col s12">
+					            			<i class="mdi-editor-attach-money prefix"></i>
+					            			<input type="number" class="form-control"  ng-model="tarea.ACUPRE" step='0.01' required>
+											<label for="clave">Presupuesto</label>
+					          			</div>
 							        </div>
+							        <p>
+							    		<a href="#" class="btn-flat" id="dependencias">
+							    			Añadir dependencias de tareas
+							    		</a>
+							    	</p>
+							    	<div ng-if='checkedDependencias.length > 0' style="width:auto;height:200px;overflow-y:scroll;">
+		        		
+						        		<h5>Dependencias</h5>
+						        		<table>
+							        		<thead>
+							        			<td>Depende de</td>
+							        		</thead>
+							        		<tr ng-repeat='descripcion in checkedDependencias'>
+							        			<td >{{descripcion}}</td>
+							        		</tr>
+							        	</table>
+		        					</div>
 					    <div class="form-group">
 							<button type="submit" class="btn btn waves-effect waves-red right">Agregar</button>
 						</div>  
+						
 				    </form>  
+				    </div>
 	    		</div>
 	  		</div>
   		</div>
     </div>
+    <div id="inv" class="modal">
+							<div class="modal-content">
+								<div class="row">
+									<div class="col s12">
+										<h6 style="text-align:center;" class="grey-text">Añadir Dependencias</h6>
+									</div>
+								</div>
+								<form class="col s12">
+							        <div class="input-field">
+							            <i class="mdi-action-search prefix"></i>
+							            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+							        	<label for="icon_prefix" class="">Buscar</label>
+							        </div>
+								</form>
+					          	<span ng-repeat="c in tareas|filter:busqueda">
+									<input type='checkbox' ng-click='addDependencia(c._id,c.ACUCJU,c.ACUDES)' id="{{c._id}}" value="{{c._id}}" check-list='checkedEmpleados'>
+									<label style="color:black;" for="{{c._id}}">
+											<b class="grey-text">{{c.ACUDES}}</b>
+									</label>
+									<br><br>
+								</span>
+							</div>
+							<div class="modal-footer">
+								
+								<a class="modal-action modal-close wavs-effects wavs-green btn-flat" ng-click='limpiar()'>Cancelar</a>
+								<button id="enviarInvitaciones" class="modal-action modal-close wavs-effects wavs-green btn-flat">Añadir</button>
+							</div>
+						</div>
+	<div id="entregable" class="modal">
+		<div class="modal-content">
+			<div ng-if='bloqueado=="false"'>
+	    		<span class="card-title grey-text text-darken-4">No puedes subir tu entregable hasta que las tareas se terminen.<i class='mdi-navigation-close right'></i></span>
+	    	</div>
+	    	<div ng-if='acuerdo.ACUSTA=="Terminada"'>
+	    		<span class="card-title grey-text text-darken-4">La tarea ya esta terminada.<i class='mdi-navigation-close right'></i></span>
+	    		<br>
+	    		<h5>Entregable</h5>
+	    		<img src="{{url_final}}" class="responsive-img">
+	    	</div>
+	    	<div ng-if='bloqueado=="true" && acuerdo.ACUSTA!="Terminada"'>
+	      		<span class="card-title grey-text text-darken-4">Subir entregable<i class='mdi-navigation-close right'></i></span>
+	      		<form class="form-horizontal" role="form"  enctype='multipart/form-data'>
+	      			<div class="form-group">
+						<label for="ACUCJU">Nombre</label>
+						<div class="col s12 m12 l12">
+							<input class="form-control" id="ACUCJU" ng-model='filename' name="nombre" type="text" class="validate" required>
+						</div>
+					</div>
+					<div class="file-field input-field">
+			      		<div class="btn">
+			        		<span>Archivo</span>
+			        		<input type="file" file-model="myFile" name='photo'>
+			      		</div>
+			      		<div class="file-path-wrapper">
+			       		    <input class="file-path validate" type="text">
+			      		</div>
+			    	</div>
+				    <div class="form-group">
+						<button type="button" ng-click='entregable(filename, myFile)' class="btn btn waves-effect waves-red right">Aceptar</button>
+					</div>  
+			    </form>  
+			</div>
+		</div>
+	</div>
 </body>
 </html>		
