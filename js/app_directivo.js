@@ -12,7 +12,6 @@ $(document).on("click","#entregablebtn", function(){
     $("#entregable").openModal()// Abrimos la ventana
 });
 
-document.addEventListener("deviceready", onDeviceReady, false);
 
 app.directive('fileModel', ['$parse', function ($parse) {
     return {
