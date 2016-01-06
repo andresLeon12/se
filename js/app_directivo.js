@@ -338,10 +338,16 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
 			var dias_diferencias = restaFechas(today, $scope.juntas[i].JUTFEC)
 			if (dias_diferencias == 0) {
 				Materialize.toast("<a href='junta.html?id="+$scope.juntas[i]._id+"'>Hola "+$scope.usuario.nombreC+", hoy se llevará acabo la junta "+$scope.juntas[i].JUTCVE+" a la cual fuiste invitado, se llevará acabo en "+$scope.juntas[i].JUTLUG+" a las "+$scope.juntas[i].JUTHOR+" hrs.</a>", 10000)
+                playBeep()
+        vibrate()
 			}else if (dias_diferencias == 1) {
 				Materialize.toast("<a href='junta.html?id="+$scope.juntas[i]._id+"'>Hola "+$scope.usuario.nombreC+", mañana se llevará acabo la junta "+$scope.juntas[i].JUTCVE+" a la cual fuiste invitado, se llevará acabo en "+$scope.juntas[i].JUTLUG+" a las "+$scope.juntas[i].JUTHOR+" hrs.</a>", 10000)
+                playBeep()
+        vibrate()
 			}else if (dias_diferencias < 3 && dias_diferencias > 0) {
 				Materialize.toast("<a href='junta.html?id="+$scope.juntas[i]._id+"'>Hola "+$scope.usuario.nombreC+", te recordamos que tienes una junta en "+dias_diferencias+" dias, la junta es "+$scope.juntas[i].JUTCVE+" y se llevará acabo en "+$scope.juntas[i].JUTLUG+"</a>", 4000)
+                playBeep()
+        vibrate()
 			};
 		}
 	}
@@ -354,10 +360,16 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
 			var dias_diferencias = restaFechas(today, $scope.acuerdos[i].ACUTIM)
 			if (dias_diferencias == 0) {
 				Materialize.toast("<a href='acuerdo.html?id="+$scope.acuerdos[i]._id+"'>Hola "+$scope.usuario.nombreC+", hoy es el día limite para cumplir con el acuerdo "+$scope.acuerdos[i].ACUNAC+" que te fue asignado.</a>", 10000)
+                playBeep()
+        vibrate()
 			}else if (dias_diferencias == 1) {
 				Materialize.toast("<a href='acuerdo.html?id="+$scope.acuerdos[i]._id+"'>Hola "+$scope.usuario.nombreC+", mañana es el día limite para cumplir con el acuerdo "+$scope.acuerdos[i].ACUNAC+" que te fue asignado.</a>", 10000)
+                playBeep()
+        vibrate()
 			}else if (dias_diferencias < 3 && dias_diferencias > 0) {
 				Materialize.toast("<a href='acuerdo.html?id="+$scope.acuerdos[i]._id+"'>Hola "+$scope.usuario.nombreC+", faltan "+dias_diferencias+" dias para cumplir con el acuerdo "+$scope.acuerdos[i].ACUNAC+" que te fue asignado.</a>", 10000)
+                playBeep()
+        vibrate()
 			};
 		}
 	}
