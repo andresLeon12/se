@@ -86,10 +86,27 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
             }
         });
     }
-    
+    function showAlert2() {
+                    navigator.notification.alert(
+                        'Se te ha asignado un nueva tarea!',  // message
+                        'Nueva Tarea',            // title
+                        'Aceptar'                  // buttonName
+                    );
+                }
+                function playBeep() {
+                    navigator.notification.beep(3);
+                }
+
+                // Vibrate for 2 seconds
+                //
+                function vibrate() {
+                    navigator.notification.vibrate(2000);
+                }
 	/* Funcion de escucha ante un nuevo acuerdo */
 	socket.on("nueva_tarea", function (data) {
-        nuevaTareaAlert()
+        showAlert2()
+        playBeep()
+        vibrate()
 		var user = JSON.parse(usuario)
 		var myName = user._id;
 		if (myName == data.ACUCPE) {
@@ -108,19 +125,6 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
 		    });
 		};
 	});
-    function alertDismissed() {
-            // do something
-        }
-    // Alerta de nueva junta
-    function nuevaTareaAlert() {
-        navigator.notification.beep(3);
-        navigator.notification.alert(
-            'Se te ha asignado una nueva tarea!',  // message
-            alertDismissed,         // callback
-            'Nueva junta',            // title
-            'Aceptar'                  // buttonName
-        );
-    }
 	/* Metodo para obtener la cantidad de acuerdos del usuario */
 	function total_tareas(){
 		var user = JSON.parse(usuario)

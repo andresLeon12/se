@@ -75,6 +75,7 @@
     </feature>
     <access origin="*" />
     <plugin name="cordova-plugin-whitelist" />
+    <plugin name="Notification" value="org.apache.cordova.Notification"/>
     <allow-navigation href="http://*/*" />
     <allow-navigation href="https://*/*" />
 </widget>

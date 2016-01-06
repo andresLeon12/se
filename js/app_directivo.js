@@ -95,7 +95,7 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
         }
         var uploadUrl = url_server+"guardar";
         fileUpload.uploadFileToUrl(filename, file, $scope.acuerdo, uploadUrl);
-    }
+    }/*
        function alertDismissed() {
             // do something
         }
@@ -118,7 +118,7 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
             'Nueva junta',            // title
             'Aceptar'                  // buttonName
         );
-    }
+    }*/
 	/* Método para obtener información de un acuerdo específico */
     function getAcuerdoUnico() {
         $http.get(url_server+"acuerdo/find/"+edit).success(function(response) {
@@ -151,9 +151,37 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
             }
         });
     }
+
+                // Show a custom alert
+                //
+                function showAlert1() {
+                    navigator.notification.alert(
+                        'Has sido invitado a una junta!',  // message
+                        'Nueva Junta',            // title
+                        'Aceptar'                  // buttonName
+                    );
+                }
+                function showAlert2() {
+                    navigator.notification.alert(
+                        'Se te ha asignado un nuevo acuerdo!',  // message
+                        'Nuevo Acuerdo',            // title
+                        'Aceptar'                  // buttonName
+                    );
+                }
+                function playBeep() {
+                    navigator.notification.beep(3);
+                }
+
+                // Vibrate for 2 seconds
+                //
+                function vibrate() {
+                    navigator.notification.vibrate(2000);
+                }
 	/* Funcion de escucha ante un nuevo acuerdo */
 	socket.on("nuevo_acuerdo", function (data) {
-		nuevoAcuerdoAlert()
+		showAlert2()
+        playBeep()
+        vibrate()
 		//alert("nuevo "+data.ACUDES);
 		var myName = $("#nombre_usuario").val();
 		if (myName == data.ACUCPE) {
@@ -166,6 +194,7 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
 			$("#notifications-dropdown-acuerdos").append(htmlText);
 			Materialize.toast('Nuevo acuerdo asignado!', 4000)
 			total_acuerdos();
+            playBeep()
 			/*$http.get(url_server+"acuerdo/buscar/"+myName+"/"+empresa).success(function(response) {
 		        if(response.type) { // Si nos devuelve un OK la API...
 		        	total_acuerdos();
@@ -176,7 +205,9 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
 
 	/* Funcion de escucha ante una nueva junta */
 	socket.on("nueva_junta", function (idj, motivo, id) {
-		nuevaJuntaAlert()
+		showAlert2()
+        playBeep()
+        vibrate()
 		var myName = $("#nombre_usuario").val();
 		if (myName == id) {
 			var numNotificaciones = parseInt($(".noti").text())
