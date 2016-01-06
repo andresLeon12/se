@@ -86,13 +86,6 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
             }
         });
     }
-    function showAlert2() {
-                    navigator.notification.alert(
-                        'Se te ha asignado un nueva tarea!',  // message
-                        'Nueva Tarea',            // title
-                        'Aceptar'                  // buttonName
-                    );
-                }
                 function playBeep() {
                     navigator.notification.beep(3);
                 }
@@ -104,7 +97,6 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
                 }
 	/* Funcion de escucha ante un nuevo acuerdo */
 	socket.on("nueva_tarea", function (data) {
-        showAlert2()
         playBeep()
         vibrate()
 		var user = JSON.parse(usuario)
