@@ -171,7 +171,7 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
                         }
                     });
                 }
-                var params = $scope.acuerdo.url_file.split('/')
+                var params = $scope.tarea.url_file.split('/')
                 var type = params[params.length-1].split('.')
                 if (type[type.length-1] == 'pdf') {
                     $scope.type_file = 'pdf'
