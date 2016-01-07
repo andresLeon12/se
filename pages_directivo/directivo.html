@@ -20,16 +20,16 @@
 			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<script type="text/javascript">
 				document.addEventListener('deviceready', function () {
-					var pushNotification = window.plugins.pushNotification;
+					/*var pushNotification = window.plugins.pushNotification;
 
 					pushNotification.register(
 					    successHandler, 
 					    errorHandler, 
 					    {
-					        'senderID':'AIzaSyA1EDVtyXSywcJmj8UVEjDwTtrdnp1vkeo',
+					        'senderID':'AIzaSyDygFc2MFOyCzldXMva-HhMZZQA9lW1-Yc',
 					        'ecb':'onNotificationGCM' // callback function
 					    }
-					);
+					);*/
 				    // Android customization
 				    cordova.plugins.backgroundMode.setDefaults({ text:'Doing heavy tasks.'});
 				    // Enable background mode
@@ -45,14 +45,13 @@
 				        }, 5000);
 				    }
 				}, false);
-				function successHandler(result) {
+				/*function successHandler(result) {
 				    alert('Success: '+ result);
 				}
 				function errorHandler(error) {
 				    alert('Error: '+ error);
 				}
 				function onNotificationGCM(e) {
-					alert(e.event)
 				    switch( e.event )
 			        {
 			            case 'registered':
@@ -76,7 +75,7 @@
 			              alert('An unknown GCM event has occurred');
 			              break;
 			        }
-				}
+				}*/
 			</script>
 			<link rel='shortcut icon' type='image/x-icon' href='images/logo.png') />
 			<link rel='stylesheet' href='../css/materialize.css'/>

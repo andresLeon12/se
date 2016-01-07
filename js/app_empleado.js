@@ -82,13 +82,13 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
         var usuario = $scope.usuario;
         $('#'+usuario._id+"-Update").closeModal();
         usuario.id = usuario._id; // Pasamos la _id a id para mayor comodidad del lado del servidor a manejar el dato.
-        delete usuario._id; // Lo borramos para evitar posibles intentos de modificación de un ID en la base de datos
+        //delete usuario._id; // Lo borramos para evitar posibles intentos de modificación de un ID en la base de datos
         // Hacemos una petición PUT para hacer el update a un documento de la base de datos.
         var nombre_puesto = $("#puesto_empleado_update-"+usuario.id+" option:selected").text();
         usuario.puesto_nombre = nombre_puesto;
         $http.put(url_server+"user/actualizar", usuario).success(function(response) {
             if(response.status === "OK") {
-                getUsuarioUnico(); // Actualizamos la lista de ToDo's
+                localStorage.usuario = JSON.stringify(usuario);
                 $("#mensaje").empty();
                 $("#mensaje").append('<div class="chip">Información actualizada <i class="material-icons">Cerrar</i></div>');
                 $("#mensaje").css('color', '#FFF');
@@ -232,4 +232,30 @@ app.controller('empleadoController', ['$scope', '$http', 'fileUpload', function(
             }
         }
     };
+    // Funcion que obtiene la diferencia de dos fechas en dias
+    function restaFechas(f1,f2){
+        var aFecha1 = f1.split('/'); 
+        var aFecha2 = f2.split('/'); 
+        var fFecha1 = Date.UTC(aFecha1[2],aFecha1[1]-1,aFecha1[0]); 
+        var fFecha2 = Date.UTC(aFecha2[2],aFecha2[1]-1,aFecha2[0]); 
+        var dif = fFecha2 - fFecha1;
+        var dias = Math.floor(dif / (1000 * 60 * 60 * 24)); 
+        return dias;
+    }
+
+    function get_today(){
+        // Obtenemos la fecha de hoy con el formato dd/mm/yyyy
+        var today = new Date()
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        if(dd<10){
+            dd='0'+dd
+        } 
+        if(mm<10){
+            mm='0'+mm
+        } 
+        var today = dd+'/'+mm+'/'+yyyy;
+        return today;
+    }
 }]);
