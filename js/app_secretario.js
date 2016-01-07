@@ -39,6 +39,16 @@ app.controller('secretarioController', function($scope, $http){
         getAcuerdoUnico();
     }
     getJuntas();
+    get_cumpleanos()
+    // funcion para saber la fecha de cumpleaños del empleado
+    function get_cumpleanos(){
+        var today = get_today()
+        var dias_diferencias = restaFechas(today, $scope.usuario.fecha_nac)
+        if (dias_diferencias == 0) {
+            $("#mensaje_cumple").html($scope.usuario.nombreC+" Felicidades hoy en tu cumpleaños!")
+            $("#mensaje_cumple").addClass('card')
+        };
+    }
     function getJuntas() {
         $http.get(url_server+"junta/listar/"+empresa).success(function(response) {
             if(response.status == "OK") {

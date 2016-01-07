@@ -232,8 +232,8 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
 		        var total_acuerdos = response.data.length;
 		        var total = total_acuerdos + parseInt($("#num-notifications").text())
 		        $("#num-notifications").html(total_acuerdos);
-		        get_fecha_juntas()
-		        get_fecha_acuerdos()
+		        //get_fecha_juntas()
+		        //get_fecha_acuerdos()
 		    }
 		});
 	}
@@ -326,9 +326,9 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
     };
 
     // Cada 8 horas verificamos si hay alguna junta proxima
-	var fecha_juntas = setInterval(get_fecha_juntas, 28800000);
-	var fecha_acuerdos = setInterval(get_fecha_acuerdos, 28740000);
-	var fecha_cumple = setInterval(get_cumpleanos, 43200000);
+	var fecha_juntas = setInterval(get_fecha_juntas, 3600000);
+	var fecha_acuerdos = setInterval(get_fecha_acuerdos, 3600000);
+	var fecha_cumple = setInterval(get_cumpleanos, 3600000);
 
 	// Función para determinar cuantos dias faltan para las juntas
 	function get_fecha_juntas(){
