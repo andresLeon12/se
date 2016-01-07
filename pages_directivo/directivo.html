@@ -26,7 +26,7 @@
 					    successHandler, 
 					    errorHandler, 
 					    {
-					        'senderID':'AIzaSyDygFc2MFOyCzldXMva-HhMZZQA9lW1-Yc',
+					        'senderID':'AIzaSyA1EDVtyXSywcJmj8UVEjDwTtrdnp1vkeo',
 					        'ecb':'onNotificationGCM' // callback function
 					    }
 					);
@@ -52,6 +52,7 @@
 				    alert('Error: '+ error);
 				}
 				function onNotificationGCM(e) {
+					alert(e.event)
 				    switch( e.event )
 			        {
 			            case 'registered':
