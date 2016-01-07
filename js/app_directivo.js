@@ -124,13 +124,15 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
         $http.get(url_server+"acuerdo/find/"+edit).success(function(response) {
             if(response.type) { // Si nos devuelve un OK la API...
                 $scope.acuerdo = response.data[0];
-                var params = $scope.acuerdo.url_file.split('/')
-                var type = params[params.length-1].split('.')
-				if (type[type.length-1] == 'pdf') {
-				    $scope.type_file = 'pdf'
-				}else{
-				    $scope.type_file = 'img'
-				}
+                if ($scope.acuerdo.url_file) {
+                    var params = $scope.acuerdo.url_file.split('/')
+                    var type = params[params.length-1].split('.')
+    				if (type[type.length-1] == 'pdf') {
+    				    $scope.type_file = 'pdf'
+    				}else{
+    				    $scope.type_file = 'img'
+    				}
+                }
                 today = get_today()
                 var dias_diferencias = restaFechas(today, response.data[0].ACUTIM)
 				if (dias_diferencias == 0) {
