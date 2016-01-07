@@ -87,7 +87,7 @@
     <gap:splash gap:platform="ios" height="768" src="www/res/screen/ios/screen-ipad-landscape.png" width="1024" />
     <gap:splash gap:platform="winphone" src="www/res/screen/windows-phone/screen-portrait.jpg" />
     <gap:plugin name="de.appplant.cordova.plugin.background-mode" version="0.6.4" />
-    <gap:plugin name="com.adobe.plugins.pushplugin" />
+    <gap:plugin name="com.phonegap.plugins.pushplugin " />
     <feature name="Notification">
         <param name="android-package" value="org.apache.cordova.dialogs.Notification" />
     </feature>
