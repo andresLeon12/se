@@ -299,6 +299,7 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
     function getTareas(acuerdo){
     	$scope.bloqueado = "true";
     	$scope.tarea.empresa = empresa;
+        alert(empresa)
     	$http.get(url_server+"tarea/listar/"+acuerdo+"/"+empresa).success(function(response) {
             if(response.status === "OK") { // Si nos devuelve un OK la API...
             	$scope.tareas = response.data;
@@ -307,6 +308,7 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
                     if ($scope.bloqueado == "true" && (tarea_dep.ACUSTA == 'No iniciada' || tarea_dep.ACUSTA == 'En progreso') ) {
                     	$scope.bloqueado = "false";
                     };
+                    alert($scope.bloqueado)
                 }
             }
         });

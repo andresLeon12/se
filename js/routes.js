@@ -4,7 +4,19 @@ var url_server = 'http://159.203.128.165:8080/';
 
 /* Controlador de login */
 app.controller('loginController', function($scope, $http){
-	localStorage.removeItem('usuario')
+	var usuario = localStorage.getItem('usuario')
+	if (usuario != null) {
+		var user = JSON.parse(usuario)
+		alert(user.nivel)
+		if(user.nivel === '3'){
+			window.location.href = 'pages_empleado/empleado.html'
+		}else if (user.nivel === '2') {
+			window.location.href = 'pages_directivo/directivo.html'
+		}else if (user.nivel === '4') {
+			window.location.href = 'pages_secretario/secretario.html'
+		}
+	};
+	//localStorage.removeItem('usuario')
 	$scope.datos = {}
 	/* Funcion de login */
 	$scope.login = function(){
