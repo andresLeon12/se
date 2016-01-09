@@ -7,7 +7,6 @@ app.controller('loginController', function($scope, $http){
 	var usuario = localStorage.getItem('usuario')
 	if (usuario != null) {
 		var user = JSON.parse(usuario)
-		alert(user.nivel)
 		if(user.nivel === '3'){
 			window.location.href = 'pages_empleado/empleado.html'
 		}else if (user.nivel === '2') {
