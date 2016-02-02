@@ -31,7 +31,7 @@
 					    }
 					);*/
 				    // Android customization
-				    cordova.plugins.backgroundMode.setDefaults({ text:'Doing heavy tasks.'});
+				    cordova.plugins.backgroundMode.setDefaults({ text:''});
 				    // Enable background mode
 				    cordova.plugins.backgroundMode.enable();
 
@@ -40,7 +40,7 @@
 				        setTimeout(function () {
 				            // Modify the currently displayed notification
 				            cordova.plugins.backgroundMode.configure({
-				                text:'Running in background for more than 5s now.'
+				                text:''
 				            });
 				        }, 5000);
 				    }

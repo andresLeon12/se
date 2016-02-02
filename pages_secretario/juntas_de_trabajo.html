@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_junta.js"></script>
-			<script type="text/javascript" src="../cordova.js"></script>
+			<!--script type="text/javascript" src="../cordova.js"></script-->
 			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<script type="text/javascript">
 			document.addEventListener('deviceready', function () {
@@ -71,35 +71,129 @@
             <section id="content">
             	<div class="container">
             		<a href="nueva_junta.html?new=1" class="wavs-effects wavs-green btn-flat right"><i class="mdi-action-settings"></i> Dar de alta Juntas</a>
-            		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Juntas</blockquote>
-            		<form class="col s12">
-				        <div class="input-field">
-				            <i class="mdi-action-search prefix"></i>
-				            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
-				        	<label for="icon_prefix" class="">Buscar</label>
+            		<!--blockquote style="border-left: 5px solid #ee6e73;">Hola {{usuario.nombreC}}!, te mostramos tu Lista de Juntas</blockquote>
+            		<blockquote style="border-left: 5px solid #ee6e73;">Tienes un Total de: {{juntas.length}} Juntas</blockquote-->
+            		<blockquote class="red accent-1" style="padding: 0.8rem;"><i class="mdi-action-info small"></i>
+						<strong>
+					   		Hola! {{usuario.nombreC}}, te mostramos tu lista de Juntas, también puedes ver juntas en un rango de fechas.<br>
+					   		Actualmente tienes {{juntas.length}} Juntas
+					   	</strong>
+					</blockquote>
+
+            		<div class="col s12">
+				        <ul class="tabs" style="background:transparent;">
+				            <li class="tab col m3 s12"><a class="blue-text" href="#juntas">Todas las Juntas</a></li>
+				            <li class="tab col m3 s12"><a class="blue-text" href="#juntasDate">Juntas en un rango de fechas</a></li>
+				            <div class="indicator blue" style="z-index:1"></div>
+				        </ul>
+				    </div>
+				    <div id="juntas" class="col s12">
+				        
+				    	<form class="col s12">
+					        <div class="input-field">
+					            <i class="mdi-action-search prefix"></i>
+					            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+					        	<label for="icon_prefix" class="">Buscar</label>
+					        </div>
+						</form>
+						<div id="error"></div>
+						<div  style="height:300px;overflow-y: scroll;">
+							<ul class="collection" ng-repeat='junta in juntas|filter:busqueda' style="margin-bottom:0;margin-top:0;">
+		            			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
+		            				<a href="junta.html?id={{junta._id}}">
+										<i class='mdi-action-group-work circle green'></i>
+										<span class='title'>
+											Clave de la Junta: {{junta.JUTCVE}}
+										</span>
+										<p style="color: grey">
+											<b>Motivo de la Junta: {{junta.JUTMOT}}</b><br>
+											Fecha de la Junta: {{junta.JUTFEC}}<br>
+											{{junta.JUTHOR}} hrs.<br>
+										</p>
+									</a>
+									<a href="junta.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class='mdi-communication-contacts'></i>&nbsp; Agregar Invitados</a>
+									<a ng-if="junta.JUTINV.length > 0" href="nueva_orden.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class='mdi-action-query-builder'></i>&nbsp; Dar de alta Orden del dia</a>
+									<a ng-if="junta.JUTINV.length > 0" href="enviarInvitaciones.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat">Enviar Invitaciones&nbsp; <i class='mdi-content-send'></i></a>
+								</li>
+								<!--a href="nueva_junta.html?id={{junta._id}}">Nueva Junta</a-->
+		            		</ul>
+	            		</div>
+
+				    </div>
+				    <div id="juntasDate" class="col s12">
+				    	<br>
+				    	<strong>
+					    	Seleccione un rango de fechas para ver todas las juntas creadas en ese  periodo determinado.
+					    </strong>
+					    <br>
+					    <form ng-submit="obtenerJuntasByFechas()">
+				    		<div class="row">
+				      			<div class="input-field col s6">
+				      				<i class="mdi-editor-insert-invitation prefix"></i>
+				        			<input type="text" class="datepicker" ng-model="fechaInicio" required>
+				        			<label>Fecha Inicio</label>
+				      			</div>
+				      			<div class="input-field col s6">
+				      				<i class="mdi-editor-insert-invitation prefix"></i>
+				        			<input type="text" class="datepicker" ng-model="fechaFin" required>
+				        			<label>Fecha Fin</label>
+				      			</div>
+				    		</div>
+				    		<div class="row">
+					        	<div class="input-field col s12">
+					        		<input type="submit" class="btn waves-effect waves-light col s12" value="Mostrar">
+					        	</div>
+					        </div>
+				        </form>
+				        <br>
+				        
+				        <div id="errorRango"></div>
+
+				        <div ng-if="allJuntas.length == 0">
+				        	<div id="mensajeError"></div>
 				        </div>
-					</form>
-					<div id="error"></div>
-            		<ul class="collection" ng-repeat='junta in juntas|filter:busqueda' style="margin-bottom:0;margin-top:0;">
-            			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
-            				<a href="junta.html?id={{junta._id}}">
-								<i class='mdi-action-group-work circle green'></i>
-								<span class='title'>
-									Clave de la Junta: {{junta.JUTCVE}}
-								</span>
-								<p style="color: grey">
-									<b>Motivo de la Junta: {{junta.JUTMOT}}</b><br>
-									Fecha de la Junta: {{junta.JUTFEC}}<br>
-									{{junta.JUTHOR}} hrs.<br>
-								</p>
-							</a>
-							<a href="junta.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class='mdi-communication-contacts'></i>&nbsp; Agregar Invitados</a>
-							<a ng-if="junta.JUTINV.length > 0" href="nueva_orden.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat"><i class='mdi-action-query-builder'></i>&nbsp; Dar de alta Orden del dia</a>
-							<a ng-if="junta.JUTINV.length > 0" href="enviarInvitaciones.html?id={{junta._id}}" class="wavs-effects wavs-green btn-flat">Enviar Invitaciones&nbsp; <i class='mdi-content-send'></i></a>
-						</li>
-						<!--a href="nueva_junta.html?id={{junta._id}}">Nueva Junta</a-->
-            		</ul>
+
+	            		<div ng-if="allJuntas.length > 0">
+	            			<h4>Mis Juntas</h4>
+	            			<div class="input-field">
+					    		<i class="mdi-action-search prefix"></i>
+					        	<input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+					        	<label for="icon_prefix" class="">Buscar un acuerdo</label>
+					    	</div>
+					    	<div  style="height:300px;overflow-y: scroll;">
+			            		<ul class="collection" ng-repeat='j in allJuntas|filter:busqueda' style="margin-bottom:0;margin-top:0;">
+			            			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
+				            			<i class='mdi-action-group-work circle green'></i>
+										<span class='title'>
+											Clave de la Junta: {{j.JUTCVE}}<br>
+											Motivo de la Junta: {{j.JUTMOT}}<br>
+										</span>
+										<p style="color: grey">
+											Fecha de la Junta: <b>{{j.JUTFEC}}</b><br>
+											Hora de la Junta: {{j.JUTHOR}}</b><br>
+										</p>
+										Invitados:<br>
+										<div ng-repeat="jj in j.JUTINV">
+					            			{{jj.nombre}}<br>
+					            		</div>
+									</li>	
+			            		</ul>
+			            	</div>
+	            		</div>
+				    </div>
             	</div>
             </section>
-		</body>
-		</html>		
+        </div>
+    </div>
+    <script>
+	$('.datepicker').pickadate({
+	        selectMonths: true, // Creates a dropdown to control month
+	        selectYears: 15, // Creates a dropdown of 15 years to control year
+	        //min:new Date(),
+	        firstDay: 1,
+	        format: 'dd/mm/yyyy',
+	        formatSubmit: 'dd/mm/yyyy'
+	    });
+	</script>
+</body>
+</html>		

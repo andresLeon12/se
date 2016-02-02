@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_directivo.js"></script>
-			<!--<script type="text/javascript" src="../cordova.js"></script>-->
+			<script type="text/javascript" src="../cordova.js"></script>
 			<script type="text/javascript" src="../js/PushNotification.js"></script>
 			<script type="text/javascript" src="../vibration.js"></script>
 			<script type="text/javascript" src="../notification.js"></script>
@@ -31,7 +31,7 @@
 					    }
 					);*/
 				    // Android customization
-				    cordova.plugins.backgroundMode.setDefaults({ text:'Doing heavy tasks.'});
+				    cordova.plugins.backgroundMode.setDefaults({ text:''});
 				    // Enable background mode
 				    cordova.plugins.backgroundMode.enable();
 
@@ -40,7 +40,7 @@
 				        setTimeout(function () {
 				            // Modify the currently displayed notification
 				            cordova.plugins.backgroundMode.configure({
-				                text:'Running in background for more than 5s now.'
+				                text:''
 				            });
 				        }, 5000);
 				    }

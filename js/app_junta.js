@@ -34,6 +34,12 @@ $(document).on("click","#send", function(){
 //var myApp = angular.module('ToDoList',[]);
 //angular.module('ToDoList.controllers', []).controller('MainCtrl', ['$scope', '$http', function($scope, $http) {
 app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
+        
+        //----------------------------------------------------
+        var usuario = localStorage.getItem("usuario")///nuevo|
+        $scope.usuario = JSON.parse(usuario);//NUEVO         |
+        // ---------------------------------------------------
+        
         var empresa = localStorage.getItem("empresa")
         //alert("empresa "+empresa);
         $scope.juntaN = {}
@@ -41,6 +47,16 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
         // Funcionalidad del controlador
         $scope.nuevaJunta = function() {
             /*$scope.juntaN.JUTHOR = getHora();*/
+
+            //JUTFEC
+            //la fecha del acuerdo se transforma asi, esto para poder hacer los reportes, buscando mas facil la info. en un rango de datos
+            var dat = $scope.juntaN.JUTFEC;
+            var datII = dat.split("/");
+            var dia = datII[1] - 1;
+            var fechaISO = new Date(datII[2],dia,datII[0]).toISOString();//mes 
+            $scope.juntaN.fechaJ = fechaISO;
+
+
             $scope.juntaN.JUTSTA = "C";
             $scope.juntaN.empresa = empresa;
             // Hacemos un POST a la API para dar de alta nuestro nuevo ToDo
@@ -127,6 +143,13 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
             junta.id = junta._id; // Pasamos la _id a id para mayor comodidad del lado del servidor a manejar el dato.
             delete junta._id; // Lo borramos para evitar posibles intentos de modificación de un ID en la base de datos
             //alert("Id "+junta.id+" email "+junta.email);
+
+            var dat = $scope.junta.JUTFEC;
+            var datII = dat.split("/");
+            var dia = datII[1] - 1;
+            var fechaISO = new Date(datII[2],dia,datII[0]).toISOString();//mes 
+            $scope.junta.fechaJ = fechaISO;
+
             // Hacemos una petición PUT para hacer el update a un documento de la base de datos.
             $http.put(url_server+"junta/actualizar", junta).success(function(response) {
                 if(response.status === "OK") {
@@ -410,5 +433,57 @@ app.controller('juntaController', ['$scope', '$http', function($scope, $http) {
         } 
         var today = dd+'/'+mm+'/'+yyyy;
         return today;
+    }
+
+    $scope.obtenerJuntasByFechas = function(){
+        
+        var aux_f1 = $scope.fechaInicio;
+        if(aux_f1 == undefined){
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Ingrese Fecha de Inicio</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        var f1 = aux_f1.split("/");
+        var dia = f1[1] - 1;
+        var fechaI = new Date(f1[2],dia,f1[0]);
+        
+
+        var aux_f2 = $scope.fechaFin;
+        if(aux_f2 == undefined){
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Ingrese Fecha de Fin</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        var f2 = aux_f2.split("/");
+        var dia2 = f2[1] - 1;
+        var fechaII = new Date(f2[2],dia2,f2[0]);
+        
+        if(fechaI - fechaII > 0){
+            $("#mensajeError").empty();
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Error en el rango de Fechas. La fecha de inicio debe ser mayor que el de fin.</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        
+        //alert("Fin "+$scope.fechaFin);
+        var fecI = new Date(f1[2],dia,f1[0]).toISOString();//mes 
+        var fecII = new Date(f2[2],dia2,f2[0]).toISOString();//mes 
+        
+        $http.get(url_server+'junta/buscarDatosByFecha', { params : {inicio: fecI, fin: fecII}}).success(function (response){        
+        //$http.get(url_server+'acuerdo/buscarDatosByFecha', { params : {inicio: fecI, fin: fecII}}).success(function (response){
+            if(response.type) { // Si nos devuelve un OK la API...
+                $("#errorRango").empty();
+                if(response.data.length == 0){
+                    $("#mensajeError").empty();
+                    $("#mensajeError").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>No hay juntas registradas entre el '+$scope.fechaInicio+' y el '+$scope.fechaFin+'.</p></div></div></div></div>');
+                    $("#mensajeError").css('color', '#d50000');
+                }
+                $scope.allJuntas = response.data;                        
+            }
+        });
+
     }
 }]);

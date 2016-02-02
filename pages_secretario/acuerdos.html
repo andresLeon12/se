@@ -13,7 +13,7 @@
 			<script type="text/javascript" src="../js/plugins.min.js"></script>
 			<script type="text/javascript" src="../js/perfect-scrollbar.min.js"></script>
 			<script type="text/javascript" src="../js/app_secretario.js"></script>
-			<script type="text/javascript" src="../cordova.js"></script>
+			<!--script type="text/javascript" src="../cordova.js"></script-->
 			<script type="text/javascript" src="../js/background-mode.js"></script>
 			<script type="text/javascript">
 			document.addEventListener('deviceready', function () {
@@ -70,34 +70,132 @@
         <div class="wrapper">
             <section id="content">
             	<div class="container">
-            		<a href="nuevo_acuerdo.html" class="wavs-effects wavs-green btn-flat right"><i class="mdi-action-visibility"></i> Agregar nuevo Acuerdo</a>
-            		<blockquote style="border-left: 5px solid #ee6e73;">Lista de Acuerdos</blockquote>
-            		<form class="col s12">
-				        <div class="input-field">
-				            <i class="mdi-action-search prefix"></i>
-				            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
-				        	<label for="icon_prefix" class="">Buscar</label>
+            		<a href="nuevo_acuerdo.html" class="wavs-effects wavs-green btn-flat right"><i class="mdi-action-settings"></i> Agregar nuevo Acuerdo</a>
+            		<!--blockquote style="border-left: 5px solid #ee6e73;">Lista de Acuerdos</blockquote-->
+            		<blockquote class="red accent-1" style="padding: 0.8rem;"><i class="mdi-action-info small"></i>
+						<strong>
+					   		Hola! {{usuario.nombreC}}, te mostramos tu lista de Acuerdos, también puedes ver acuerdos en un rango de fechas.
+					   		Actualmente tienes {{acuerdo.length}} Acuerdos
+					   	</strong>
+					</blockquote>
+
+					<div class="col s12">
+				        <ul class="tabs" style="background:transparent;">
+				            <li class="tab col m3 s12"><a class="blue-text" href="#acuerdos">Todos los Acuerdos</a></li>
+				            <li class="tab col m3 s12"><a class="blue-text" href="#acuerdosDate">Acuerdos en un rango de fechas</a></li>
+				            <div class="indicator blue" style="z-index:1"></div>
+				        </ul>
+				    </div>
+				    <div id="acuerdos" class="col s12">
+				    	
+				    	<form class="col s12">
+					        <div class="input-field">
+					            <i class="mdi-action-search prefix"></i>
+					            <input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+					        	<label for="icon_prefix" class="">Buscar</label>
+					        </div>
+						</form>
+	            		<div id="mensaje"></div>
+	            		<div  style="height:300px;overflow-y: scroll;">
+		            		<ul class="collection" ng-repeat='acuerdo in acuerdos|filter:busqueda' style="margin-bottom:0;margin-top:0;">
+		            			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
+		            				<a href="acuerdo.html?id={{acuerdo._id}}">
+										<i class='mdi-action-description circle green'></i>
+										<span class='title'>
+											Consecutivo: {{acuerdo.ACUCON}}<br>
+											Num. Acuerdo: {{acuerdo.ACUNAC}}
+											<p ng-repeat="j in juntas" ng-if="j._id == acuerdo.ACUCJU">
+												Acuerdo que pertenece a la Junta: {{j.JUTCVE}}
+											</p>
+										</span>
+										<p style="color: grey">
+											Acuerdo: {{acuerdo.ACUDES}}<br>
+										</p>
+										
+										<p>
+											Fecha Limite para el Acuerdo: {{acuerdo.ACUTIM}}<br>
+										</p>
+									</a>
+								</li>
+		            		</ul>
+		            	</div>
+
+				    </div>
+
+				    <div id="acuerdosDate" class="col s12">
+				    	<br>
+				    	<strong>
+					    	Seleccione un rango de fechas para ver todas los acuerdos creadas en ese periodo determinado.
+					    </strong>
+					    <br>
+					    <form ng-submit="obtenerAcuerdosByFechas()">
+				    		<div class="row">
+				      			<div class="input-field col s6">
+				      				<i class="mdi-editor-insert-invitation prefix"></i>
+				        			<input type="text" class="datepicker" ng-model="fechaInicio" required>
+				        			<label>Fecha Inicio</label>
+				      			</div>
+				      			<div class="input-field col s6">
+				      				<i class="mdi-editor-insert-invitation prefix"></i>
+				        			<input type="text" class="datepicker" ng-model="fechaFin" required>
+				        			<label>Fecha Fin</label>
+				      			</div>
+				    		</div>
+				    		<div class="row">
+					        	<div class="input-field col s12">
+					        		<input type="submit" class="btn waves-effect waves-light col s12" value="Mostrar">
+					        	</div>
+					        </div>
+				        </form>
+				        <br>
+				        
+				        <div id="errorRango"></div>
+
+				        <div ng-if="allAcuerdos.length == 0">
+				        	<div id="mensajeError"></div>
 				        </div>
-					</form>
-            		<div id="mensaje"></div>
-            		<ul class="collection" ng-repeat='acuerdo in acuerdos|filter:busqueda' style="margin-bottom:0;margin-top:0;">
-            			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
-            				<a href="acuerdo.html?id={{acuerdo._id}}">
-								<i class='mdi-action-description circle green'></i>
-								<span class='title'>
-									Consecutivo: {{acuerdo.ACUCON}}<br>
-									Num. Acuerdo: {{acuerdo.ACUNAC}}
-								</span>
-								<p style="color: grey">
-									Acuerdo: {{acuerdo.ACUDES}}<br>
-								</p>
-								<p ng-repeat="j in juntas" ng-if="j._id == acuerdo.ACUCJU">
-									Acuerdo que pertenece a la Junta: {{j.JUTCVE}}
-								</p>
-							</a>
-						</li>
-            		</ul>
+
+	            		<div ng-if="allAcuerdos.length > 0">
+	            			<h4>Mis Acuerdos</h4>
+	            			<div class="input-field">
+					    		<i class="mdi-action-search prefix"></i>
+					        	<input id="icon_prefix" type="text" class="validate" ng-model='busqueda'>
+					        	<label for="icon_prefix" class="">Buscar un acuerdo</label>
+					    	</div>
+		            		<div  style="height:300px;overflow-y: scroll;">
+			            		<ul class="collection" ng-repeat='a in allAcuerdos|filter:busqueda' style="margin-bottom:0;margin-top:0;">
+			            			<li class="collection-item avatar" style="border-left: solid 5px #80deea;">
+			            				<i class='mdi-action-group-work circle green'></i>
+										<span class='title'>
+											<p ng-repeat="j in juntas" ng-if="j._id == a.ACUCJU">
+									        	Acuerdo que pertenece a la Junta: {{j.JUTCVE}}<br>
+									        </p>
+											
+											Numero de Acuerdo: {{a.ACUNAC}}<br>
+											Consecutivo: {{a.ACUCON}}<br>
+										</span>
+										<p style="color: grey">
+											<b>Descripción del Acuerdo: {{a.ACUDES}}</b><br>
+											Fecha Limite para la realizacion del Acuerdo: <b>{{a.ACUTIM}}</b><br>
+										</p>
+									</li>
+			            		</ul>
+			            	</div>
+	            		</div>
+
+				    </div>
+            		
             	</div>
             </section>
+            <script>
+				$('.datepicker').pickadate({
+				        selectMonths: true, // Creates a dropdown to control month
+				        selectYears: 15, // Creates a dropdown of 15 years to control year
+				        //min:new Date(),
+				        firstDay: 1,
+				        format: 'dd/mm/yyyy',
+				        formatSubmit: 'dd/mm/yyyy'
+				    });
+				</script>
 		</body>
 		</html>		

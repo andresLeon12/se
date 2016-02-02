@@ -31,7 +31,7 @@
 					    }
 					);*/
 				    // Android customization
-				    cordova.plugins.backgroundMode.setDefaults({ text:'Doing heavy tasks.'});
+				    cordova.plugins.backgroundMode.setDefaults({ text:''});
 				    // Enable background mode
 				    cordova.plugins.backgroundMode.enable();
 
@@ -40,7 +40,7 @@
 				        setTimeout(function () {
 				            // Modify the currently displayed notification
 				            cordova.plugins.backgroundMode.configure({
-				                text:'Running in background for more than 5s now.'
+				                text:''
 				            });
 				        }, 5000);
 				    }
@@ -231,21 +231,21 @@
 		                    </div>
                 		</div>
             		</li>
-                    <!--<li class="no-padding">
+                    <li class="no-padding">
 	                    <ul class="collapsible collapsible-accordion">
-	                        <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i class="mdi-action-group-work"></i> Juntas</a></a>
+	                        <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i class="mdi-action-group-work"></i> Hacer Reportes</a></a>
 	                            <div class="collapsible-body">
 	                                <ul>
-	                                    <li><a href="nueva_junta.html?new=1">Nueva</a>
+	                                    <li><a href="reporte_juntas.html">Juntas</a>
 	                                    </li>
-	                                    <li><a href="juntas_de_trabajo.html">Todas</a>
+	                                    <li><a href="reporte_acuerdos.html">Acuerdos</a>
 	                                    </li>
 	                                </ul>
 	                            </div>
 	                        </li>
 	                    </ul>
 	                </li>
-                    <li class="no-padding">
+                    <!--li class="no-padding">
 	                    <ul class="collapsible collapsible-accordion">
 	                        <li class="bold"><a class="collapsible-header waves-effect waves-cyan"><i class="mdi-av-subtitles"></i> Orden del dia</a>
 	                            <div class="collapsible-body">

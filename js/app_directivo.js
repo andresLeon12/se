@@ -165,11 +165,17 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
                 }
 	/* Funcion de escucha ante un nuevo acuerdo */
 	socket.on("nuevo_acuerdo", function (data) {
-        playBeep()
-        vibrate()
 		//alert("nuevo "+data.ACUDES);
 		var myName = $("#nombre_usuario").val();
 		if (myName == data.ACUCPE) {
+            playBeep()
+            vibrate()
+            cordova.plugins.backgroundMode.onactivate = function () {
+                            // Modify the currently displayed notification
+                            cordova.plugins.backgroundMode.configure({
+                                text:'Nuevo acuerdo asignado'
+                            });
+                    }
 			var numNotificaciones = parseInt($(".noti2").text())
 			numNotificaciones++;
 			$(".noti2").html(numNotificaciones)
@@ -299,16 +305,16 @@ app.controller('directivoController', ['$scope', '$http', 'fileUpload', function
     function getTareas(acuerdo){
     	$scope.bloqueado = "true";
     	$scope.tarea.empresa = empresa;
-        alert(empresa)
+        //alert(empresa)
     	$http.get(url_server+"tarea/listar/"+acuerdo+"/"+empresa).success(function(response) {
             if(response.status === "OK") { // Si nos devuelve un OK la API...
             	$scope.tareas = response.data;
             	for (var i=0;i<$scope.tareas.length;i++){
                     var dep = $scope.tareas[i].ACUSTA;
-                    if ($scope.bloqueado == "true" && (tarea_dep.ACUSTA == 'No iniciada' || tarea_dep.ACUSTA == 'En progreso') ) {
+                    if ((tarea_dep.ACUSTA == 'No iniciada' || tarea_dep.ACUSTA == 'En progreso') ) {
                     	$scope.bloqueado = "false";
                     };
-                    alert($scope.bloqueado)
+                    //alert($scope.bloqueado)
                 }
             }
         });

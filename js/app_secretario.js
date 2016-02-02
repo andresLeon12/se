@@ -1,8 +1,10 @@
+var app = angular.module('secreto', [])
 var url_server = 'http://159.203.128.165:8080/';
 //var url_server = 'http://127.0.0.1:8080/';
 var socket = io.connect(url_server);
 /* Controlador para secretario */
-var app = angular.module('secreto', [])
+
+
 $('.datepicker').pickadate({
         selectMonths: true, // Creates a dropdown to control month
         selectYears: 15, // Creates a dropdown of 15 years to control year
@@ -16,7 +18,9 @@ $(document).on("click","#eliminar", function(){
     $("#delete").openModal()// Abrimos la ventana
 });
 
+//app.controller('secretarioController', ['$scope', '$http', function($scope, $http) {
 app.controller('secretarioController', function($scope, $http){
+    
     $scope.usuario = {}
 	$scope.directivos = {}
 	$scope.acuerdoN = {}
@@ -50,16 +54,10 @@ app.controller('secretarioController', function($scope, $http){
         };
     }
     function getJuntas() {
+        //alert("hola");
         $http.get(url_server+"junta/listar/"+empresa).success(function(response) {
             if(response.status == "OK") {
                 $scope.juntas = response.data;
-                /*if($scope.juntas.length == 0){
-                    $("#error").empty();
-                    $("#error").append('<div class="row"><div class="col s12 m12 l12"><div class="card blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops</span><p>Aún no hay juntas registradas en el sistema.</p></div></div></div></div>');
-                    $("#error").css('color', '#d50000');
-                }else{
-                    $("#error").empty();
-                }*/
             }
         })
     }
@@ -108,6 +106,112 @@ app.controller('secretarioController', function($scope, $http){
         });
     }
     var nC = 0;
+    
+    //Funcion para obtener informacion con un rango de fechas
+    $scope.obtenerAcuerdosByFechas = function(){
+        
+        var aux_f1 = $scope.fechaInicio;
+        if(aux_f1 == undefined){
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Ingrese Fecha de Inicio</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        var f1 = aux_f1.split("/");
+        var dia = f1[1] - 1;
+        var fechaI = new Date(f1[2],dia,f1[0]);
+        
+
+        var aux_f2 = $scope.fechaFin;
+        if(aux_f2 == undefined){
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Ingrese Fecha de Fin</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        var f2 = aux_f2.split("/");
+        var dia2 = f2[1] - 1;
+        var fechaII = new Date(f2[2],dia2,f2[0]);
+        
+        if(fechaI - fechaII > 0){
+            $("#mensajeError").empty();
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Error en el rango de Fechas. La fecha de inicio debe ser mayor que el de fin.</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        
+        //alert("Fin "+$scope.fechaFin);
+        var fecI = new Date(f1[2],dia,f1[0]).toISOString();//mes 
+        var fecII = new Date(f2[2],dia2,f2[0]).toISOString();//mes 
+        
+        $http.get(url_server+'acuerdo/buscarDatosByFecha', { params : {inicio: fecI, fin: fecII}}).success(function (response){
+            if(response.type) { // Si nos devuelve un OK la API...
+                $("#errorRango").empty();
+                if(response.data.length == 0){
+                    $("#mensajeError").empty();
+                    $("#mensajeError").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>No hay acuerdos registrados entre el '+$scope.fechaInicio+' y el '+$scope.fechaFin+'.</p></div></div></div></div>');
+                    $("#mensajeError").css('color', '#d50000');
+                }
+                $scope.allAcuerdos = response.data;                        
+            }
+        });
+
+    }
+
+    //Funcion para obtener informacion con un rango de fechas
+    $scope.obtenerJuntasByFechas = function(){
+        
+        var aux_f1 = $scope.fechaInicio;
+        if(aux_f1 == undefined){
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Ingrese Fecha de Inicio</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        var f1 = aux_f1.split("/");
+        var dia = f1[1] - 1;
+        var fechaI = new Date(f1[2],dia,f1[0]);
+        
+
+        var aux_f2 = $scope.fechaFin;
+        if(aux_f2 == undefined){
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Ingrese Fecha de Fin</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        var f2 = aux_f2.split("/");
+        var dia2 = f2[1] - 1;
+        var fechaII = new Date(f2[2],dia2,f2[0]);
+        
+        if(fechaI - fechaII > 0){
+            $("#mensajeError").empty();
+            $("#errorRango").empty();
+            $("#errorRango").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>Error en el rango de Fechas. La fecha de inicio debe ser mayor que el de fin.</p></div></div></div></div>');
+            $("#errorRango").css('color', '#d50000');
+            return;
+        }
+        
+        //alert("Fin "+$scope.fechaFin);
+        var fecI = new Date(f1[2],dia,f1[0]).toISOString();//mes 
+        var fecII = new Date(f2[2],dia2,f2[0]).toISOString();//mes 
+        
+        $http.get(url_server+'junta/buscarDatosByFecha', { params : {inicio: fecI, fin: fecII}}).success(function (response){        
+        //$http.get(url_server+'acuerdo/buscarDatosByFecha', { params : {inicio: fecI, fin: fecII}}).success(function (response){
+            if(response.type) { // Si nos devuelve un OK la API...
+                $("#errorRango").empty();
+                if(response.data.length == 0){
+                    $("#mensajeError").empty();
+                    $("#mensajeError").append('<div class="row"><div class="col s12 m12 l12"><div class="blue blue-grey darken-1"><div class="card-content white-text"><span class="card-title">Ops!</span><p>No hay juntas registradas entre el '+$scope.fechaInicio+' y el '+$scope.fechaFin+'.</p></div></div></div></div>');
+                    $("#mensajeError").css('color', '#d50000');
+                }
+                $scope.allJuntas = response.data;                        
+            }
+        });
+
+    }
+
     /* Método para agregar un acuerdo */
     $scope.nuevoAcuerdo = function(){
         //ACUNAC
@@ -132,6 +236,15 @@ app.controller('secretarioController', function($scope, $http){
                     nC = getNewIndice(indice);
                 }
             //}
+            //alert("asdasdsa");
+            //la fecha del acuerdo se transforma asi, esto para poder hacer los reportes, buscando mas facil la info. en un rango de datos
+            var dat = $scope.acuerdoN.ACUTIM;
+            var datII = dat.split("/");
+            var dia = datII[1] - 1;
+            var fechaISO = new Date(datII[2],dia,datII[0]).toISOString();//mes 
+            $scope.acuerdoN.fecha = fechaISO;
+            //------------------------------------------------------------------
+
             $scope.acuerdoN.empresa = empresa
             $scope.acuerdoN.ACUNAC = parseInt(nC);
             $scope.acuerdoN.ACUSTA = "C";
@@ -199,6 +312,13 @@ app.controller('secretarioController', function($scope, $http){
                     nC = getNewIndice(indice);
                 }
             //}
+
+            var dat = $scope.acuerdo.ACUTIM;
+            var datII = dat.split("/");
+            var dia = datII[1] - 1;
+            var fechaISO = new Date(datII[2],dia,datII[0]).toISOString();//mes 
+            $scope.acuerdo.fecha = fechaISO;
+
             //$scope.acuerdoN.empresa = empresa
             $scope.acuerdo.ACUNAC = parseInt(nC);
             //$scope.acuerdoN.ACUSTA = "C";
@@ -223,29 +343,8 @@ app.controller('secretarioController', function($scope, $http){
                 }
             }).error(function(response) {alert(JSON.stringify(response))})
         });
-
-
-        /*$http.put(url_server+"acuerdo/actualizar", acuerdo).success(function(response) {
-            if(response.status === "OK") {
-                $("#error").empty();
-                $("#error").append('<div class="chip">Información actualizada <i class="material-icons">Cerrar</i></div>');
-                $("#error").css('color', '#FFF');
-                $(".card-reveal").fadeOut()
-                if (acuerdo.ACUCPE == lastUsuarioAcuerdo) {
-                    alert("if "+acuerdo);
-                    //band = 1;
-                    socket.emit('acuerdo_actualizado', acuerdo)
-                }else{
-                    alert("else");
-                    socket.emit('acuerdo_removido', lastUsuarioAcuerdo, acuerdo.ACUDES)
-                    socket.emit("nuevo_acuerdo", acuerdo);
-                }
-
-                getAcuerdoUnico(); // Actualizamos la lista de ToDo's
-            }
-        }).error(function(response) {alert(JSON.stringify(response))})*/
-
     }
+    
     function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
             sURLVariables = sPageURL.split('&'),
