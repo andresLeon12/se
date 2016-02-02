@@ -8,6 +8,7 @@
         Andrés León Pérez
     </author>
     <content src="index.html" />
+    <preference name="android-minSdkVersion" value="7" />
     <preference name="permissions" value="none" />
     <preference name="orientation" value="default" />
     <preference name="target-device" value="universal" />
